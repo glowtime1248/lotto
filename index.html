@@ -3,16 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#070b24">
+<meta name="theme-color" content="#05020c">
 <title>로또 번호 추첨</title>
 <style>
   :root {
-    --bg-top: #0b1240;
-    --bg-bottom: #03051a;
-    --gold: #ffd54a;
-    --gold-deep: #e0a800;
-    --text: #f4f6ff;
-    --text-dim: #aab3e0;
+    --bg: #05020c;
+    --pink: #ff2d95;
+    --cyan: #22e4ff;
+    --purple: #b05cff;
+    --yellow: #ffe94d;
+    --green: #39ff88;
+    --text: #fbefff;
+    --text-dim: #b9a6d6;
     --ball-size: clamp(46px, 13vw, 78px);
   }
 
@@ -25,8 +27,11 @@
     min-height: 100dvh;
     font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
     color: var(--text);
-    background: radial-gradient(ellipse at 50% 0%, #1b2a7a 0%, var(--bg-top) 40%, var(--bg-bottom) 100%);
-    background-color: var(--bg-bottom);
+    background-color: var(--bg);
+    background-image:
+      radial-gradient(ellipse 60% 40% at 15% 10%, rgba(255, 45, 149, 0.22), transparent 70%),
+      radial-gradient(ellipse 60% 40% at 85% 15%, rgba(34, 228, 255, 0.18), transparent 70%),
+      radial-gradient(ellipse 80% 50% at 50% 100%, rgba(176, 92, 255, 0.28), transparent 70%);
     overflow-x: hidden;
     display: flex;
     align-items: center;
@@ -35,64 +40,53 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  /* ---------- 별 배경 ---------- */
-  #stars {
+  /* ---------- 네온 바닥 그리드 ---------- */
+  .floor {
+    position: fixed;
+    left: -50%;
+    right: -50%;
+    bottom: -10vh;
+    height: 55vh;
+    pointer-events: none;
+    z-index: 0;
+    background-image:
+      linear-gradient(rgba(255, 45, 149, 0.45) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 45, 149, 0.45) 1px, transparent 1px);
+    background-size: 60px 60px;
+    transform: perspective(380px) rotateX(62deg);
+    transform-origin: bottom center;
+    mask-image: linear-gradient(to top, #000 10%, transparent 85%);
+    -webkit-mask-image: linear-gradient(to top, #000 10%, transparent 85%);
+    animation: floorMove 2.4s linear infinite;
+  }
+  @keyframes floorMove {
+    from { background-position: 0 0; }
+    to   { background-position: 0 60px; }
+  }
+
+  /* 반짝이 */
+  #sparkles {
     position: fixed;
     inset: 0;
     pointer-events: none;
     z-index: 0;
     overflow: hidden;
   }
-  .star {
+  .spark {
     position: absolute;
+    width: 3px;
+    height: 3px;
     border-radius: 50%;
-    background: #fff;
-    opacity: 0.2;
-    animation: twinkle var(--dur, 3s) ease-in-out infinite;
+    background: var(--c, #fff);
+    box-shadow: 0 0 6px 2px var(--c, #fff);
+    opacity: 0;
+    animation: spark var(--dur, 4s) ease-in-out infinite;
     animation-delay: var(--delay, 0s);
   }
-  .star.big {
-    box-shadow: 0 0 6px 1px rgba(255, 255, 255, 0.8);
+  @keyframes spark {
+    0%, 100% { opacity: 0; transform: scale(0.4); }
+    50%      { opacity: 0.9; transform: scale(1.2); }
   }
-  .star.sparkle {
-    background: transparent;
-    width: 14px !important;
-    height: 14px !important;
-  }
-  .star.sparkle::before,
-  .star.sparkle::after {
-    content: "";
-    position: absolute;
-    left: 50%; top: 50%;
-    background: #fff;
-    border-radius: 2px;
-    transform: translate(-50%, -50%);
-    box-shadow: 0 0 6px 1px rgba(255, 255, 255, 0.9);
-  }
-  .star.sparkle::before { width: 2px; height: 14px; }
-  .star.sparkle::after  { width: 14px; height: 2px; }
-
-  @keyframes twinkle {
-    0%, 100% { opacity: 0.15; transform: scale(0.7); }
-    50%      { opacity: 1;    transform: scale(1.15); }
-  }
-
-  /* 스포트라이트 */
-  .spotlight {
-    position: fixed;
-    top: -20vh;
-    width: 40vw;
-    height: 140vh;
-    pointer-events: none;
-    z-index: 0;
-    background: linear-gradient(to bottom, rgba(120, 160, 255, 0.18), rgba(120, 160, 255, 0));
-    filter: blur(20px);
-    transform-origin: top center;
-  }
-  .spotlight.left  { left: 0;  animation: sweepL 9s ease-in-out infinite; }
-  .spotlight.right { right: 0; animation: sweepR 9s ease-in-out infinite; }
-  @keyframes sweepL { 0%,100% { transform: rotate(-25deg); } 50% { transform: rotate(5deg); } }
-  @keyframes sweepR { 0%,100% { transform: rotate(25deg); }  50% { transform: rotate(-5deg); } }
 
   /* ---------- 메인 ---------- */
   main {
@@ -103,84 +97,98 @@
     text-align: center;
   }
 
-  .badge {
+  .eyebrow {
     display: inline-block;
-    padding: 6px 16px;
-    border-radius: 999px;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.2em;
-    color: #fff;
-    background: linear-gradient(90deg, #ff3d6e, #ff8a3d);
-    box-shadow: 0 0 18px rgba(255, 80, 110, 0.6);
-    margin-bottom: 14px;
+    font-size: clamp(12px, 3.2vw, 14px);
+    font-weight: 800;
+    letter-spacing: 0.4em;
+    padding-left: 0.4em;
+    color: var(--cyan);
+    text-shadow: 0 0 4px var(--cyan), 0 0 12px var(--cyan);
+    margin-bottom: 10px;
   }
-  .badge .dot {
-    display: inline-block;
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: #fff;
-    margin-right: 6px;
-    vertical-align: 1px;
-    animation: blink 1s steps(2, start) infinite;
-  }
-  @keyframes blink { to { visibility: hidden; } }
 
+  /* 네온 간판 제목 */
   h1 {
-    font-size: clamp(32px, 9vw, 60px);
+    font-size: clamp(34px, 10vw, 64px);
     font-weight: 900;
-    letter-spacing: -0.02em;
     line-height: 1.1;
-    background: linear-gradient(180deg, #fff8d6 0%, var(--gold) 45%, var(--gold-deep) 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    filter: drop-shadow(0 0 14px rgba(255, 210, 70, 0.55)) drop-shadow(0 4px 0 rgba(120, 70, 0, 0.6));
+    letter-spacing: 0.02em;
+    color: #fff4fb;
+    text-shadow:
+      0 0 4px #fff,
+      0 0 10px var(--pink),
+      0 0 22px var(--pink),
+      0 0 44px var(--pink),
+      0 0 80px rgba(255, 45, 149, 0.6);
+    animation: flicker 6s linear infinite;
+  }
+  h1 .accent {
+    color: #f4fdff;
+    text-shadow:
+      0 0 4px #fff,
+      0 0 10px var(--cyan),
+      0 0 22px var(--cyan),
+      0 0 44px var(--cyan),
+      0 0 80px rgba(34, 228, 255, 0.6);
+    animation: flicker2 7.3s linear infinite;
+  }
+  @keyframes flicker {
+    0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; }
+    20%, 24%, 55% { opacity: 0.45; }
+  }
+  @keyframes flicker2 {
+    0%, 70%, 73%, 100% { opacity: 1; }
+    71%, 72% { opacity: 0.35; }
   }
 
   .subtitle {
-    margin-top: 10px;
+    margin-top: 14px;
     color: var(--text-dim);
     font-size: clamp(14px, 3.6vw, 17px);
   }
 
-  /* ---------- 추첨판 ---------- */
+  /* ---------- 추첨판 (마키 전구 테두리) ---------- */
   .stage {
     position: relative;
     margin: 32px auto 36px;
-    padding: clamp(22px, 5vw, 36px) clamp(12px, 4vw, 28px);
-    border-radius: 28px;
+    padding: clamp(30px, 6vw, 42px) clamp(14px, 4vw, 30px);
+    border-radius: 26px;
     background:
-      linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)),
-      rgba(10, 18, 70, 0.55);
-    border: 2px solid rgba(255, 213, 74, 0.55);
+      linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0)),
+      rgba(16, 6, 32, 0.85);
+    border: 2px solid var(--purple);
     box-shadow:
-      0 0 0 6px rgba(255, 213, 74, 0.08),
-      0 0 40px rgba(255, 213, 74, 0.25),
-      inset 0 0 40px rgba(80, 120, 255, 0.25);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
+      0 0 0 4px rgba(176, 92, 255, 0.12),
+      0 0 18px rgba(176, 92, 255, 0.7),
+      0 0 50px rgba(255, 45, 149, 0.35),
+      inset 0 0 26px rgba(176, 92, 255, 0.45);
   }
 
-  /* 전광판 테두리 전구 */
   .bulbs {
     position: absolute;
     left: 18px; right: 18px;
-    height: 8px;
+    height: 10px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
   }
-  .bulbs.top    { top: 8px; }
-  .bulbs.bottom { bottom: 8px; }
+  .bulbs.top    { top: 9px; }
+  .bulbs.bottom { bottom: 9px; }
   .bulbs span {
-    width: 7px; height: 7px;
+    width: 8px; height: 8px;
     border-radius: 50%;
-    background: #ffe27a;
-    box-shadow: 0 0 8px 2px rgba(255, 220, 100, 0.9);
-    animation: bulb 1.2s ease-in-out infinite;
+    background: #3a2a10;
+    animation: chase 0.9s linear infinite;
   }
-  .bulbs span:nth-child(even) { animation-delay: 0.6s; }
-  @keyframes bulb { 0%,100% { opacity: 1; } 50% { opacity: 0.25; } }
+  .bulbs span:nth-child(3n+2) { animation-delay: -0.3s; }
+  .bulbs span:nth-child(3n)   { animation-delay: -0.6s; }
+  .bulbs.bottom span { animation-direction: reverse; }
+  .stage.drawing .bulbs span { animation-duration: 0.36s; }
+  @keyframes chase {
+    0%, 33%   { background: #fff3b0; box-shadow: 0 0 6px 2px #ffd34d, 0 0 14px 4px rgba(255, 180, 40, 0.6); }
+    34%, 100% { background: #4a3514; box-shadow: none; }
+  }
 
   .balls {
     display: flex;
@@ -196,16 +204,24 @@
     width: var(--ball-size);
     height: var(--ball-size);
     border-radius: 50%;
-    border: 2px dashed rgba(170, 179, 224, 0.35);
+    border: 2px solid rgba(176, 92, 255, 0.45);
+    box-shadow: inset 0 0 12px rgba(176, 92, 255, 0.35), 0 0 8px rgba(176, 92, 255, 0.25);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: rgba(170, 179, 224, 0.5);
+    color: rgba(214, 180, 255, 0.55);
     font-weight: 800;
     font-size: calc(var(--ball-size) * 0.36);
   }
+  .stage.drawing .placeholder {
+    animation: waitPulse 0.8s ease-in-out infinite;
+  }
+  @keyframes waitPulse {
+    0%, 100% { border-color: rgba(176, 92, 255, 0.4); }
+    50%      { border-color: rgba(255, 45, 149, 0.9); box-shadow: inset 0 0 14px rgba(255, 45, 149, 0.4), 0 0 14px rgba(255, 45, 149, 0.5); }
+  }
 
-  /* ---------- 공 ---------- */
+  /* ---------- 네온 공 ---------- */
   .ball {
     position: relative;
     width: var(--ball-size);
@@ -217,16 +233,18 @@
     font-weight: 900;
     font-size: calc(var(--ball-size) * 0.4);
     color: #fff;
-    text-shadow: 0 2px 3px rgba(0, 0, 0, 0.45);
-    background: radial-gradient(circle at 32% 28%, var(--c-light) 0%, var(--c-main) 45%, var(--c-dark) 100%);
+    text-shadow: 0 0 4px rgba(255,255,255,0.9), 0 1px 3px rgba(0, 0, 0, 0.6);
+    background: radial-gradient(circle at 32% 28%, var(--c-light) 0%, var(--c-main) 42%, var(--c-dark) 100%);
+    border: 2px solid var(--c-light);
     box-shadow:
-      inset -6px -8px 14px rgba(0, 0, 0, 0.35),
+      inset -6px -8px 14px rgba(0, 0, 0, 0.45),
       inset 4px 5px 10px rgba(255, 255, 255, 0.35),
-      0 10px 18px rgba(0, 0, 0, 0.5),
-      0 0 22px var(--c-glow);
-    animation: popIn 0.9s cubic-bezier(.3,.7,.4,1) both;
+      0 0 10px var(--c-main),
+      0 0 26px var(--c-main),
+      0 0 50px var(--c-glow);
+    animation: popIn 0.9s cubic-bezier(.3,.7,.4,1) both, glowPulse 2.4s ease-in-out 0.9s infinite;
   }
-  /* 하이라이트 광택 */
+  /* 광택 하이라이트 */
   .ball::before {
     content: "";
     position: absolute;
@@ -238,26 +256,27 @@
     background: radial-gradient(ellipse at center, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0) 75%);
     transform: rotate(-30deg);
   }
-  /* 바닥 그림자 */
+  /* 바닥에 비친 네온 빛 */
   .ball::after {
     content: "";
     position: absolute;
     bottom: -16px;
-    left: 15%;
-    width: 70%;
+    left: 12%;
+    width: 76%;
     height: 8px;
     border-radius: 50%;
-    background: rgba(0, 0, 0, 0.45);
-    filter: blur(3px);
+    background: var(--c-main);
+    opacity: 0.6;
+    filter: blur(5px);
     animation: shadowIn 0.9s cubic-bezier(.3,.7,.4,1) both;
   }
   .ball span { position: relative; z-index: 1; }
 
-  .ball.yellow { --c-light:#fff6b0; --c-main:#fbc400; --c-dark:#b07d00; --c-glow:rgba(251,196,0,0.55); color:#fff; }
-  .ball.blue   { --c-light:#b9e3ff; --c-main:#2d8cf0; --c-dark:#0b4a9a; --c-glow:rgba(45,140,240,0.55); }
-  .ball.red    { --c-light:#ffb3b3; --c-main:#f0453a; --c-dark:#9a1a12; --c-glow:rgba(240,69,58,0.55); }
-  .ball.gray   { --c-light:#e8e8ee; --c-main:#8f929e; --c-dark:#4a4c56; --c-glow:rgba(180,180,195,0.45); }
-  .ball.green  { --c-light:#c4f7a8; --c-main:#4cbb2a; --c-dark:#1f6e0e; --c-glow:rgba(76,187,42,0.55); }
+  .ball.yellow { --c-light:#fffbd0; --c-main:#ffd400; --c-dark:#8a6a00; --c-glow:rgba(255,233,77,0.55); color:#fff; }
+  .ball.cyan   { --c-light:#d4fbff; --c-main:#12c8ec; --c-dark:#04566e; --c-glow:rgba(34,228,255,0.55); }
+  .ball.pink   { --c-light:#ffd0e8; --c-main:#ff2d95; --c-dark:#7a0a44; --c-glow:rgba(255,45,149,0.6); }
+  .ball.purple { --c-light:#ead6ff; --c-main:#a04cff; --c-dark:#45138a; --c-glow:rgba(176,92,255,0.6); }
+  .ball.green  { --c-light:#d2ffe4; --c-main:#1fe07a; --c-dark:#086b36; --c-glow:rgba(57,255,136,0.55); }
 
   @keyframes popIn {
     0%   { opacity: 0; transform: translateY(-140px) scale(0.3) rotate(-180deg); }
@@ -269,26 +288,31 @@
   }
   @keyframes shadowIn {
     0%   { opacity: 0; transform: scaleX(0.2); }
-    40%  { opacity: 1; transform: scaleX(1.1); }
-    55%  { opacity: 0.5; transform: scaleX(0.7); }
-    70%  { opacity: 1; transform: scaleX(1.05); }
-    82%  { opacity: 0.8; transform: scaleX(0.9); }
-    100% { opacity: 1; transform: scaleX(1); }
+    40%  { opacity: 0.7; transform: scaleX(1.1); }
+    55%  { opacity: 0.3; transform: scaleX(0.7); }
+    70%  { opacity: 0.7; transform: scaleX(1.05); }
+    82%  { opacity: 0.5; transform: scaleX(0.9); }
+    100% { opacity: 0.6; transform: scaleX(1); }
+  }
+  @keyframes glowPulse {
+    0%, 100% { filter: brightness(1); }
+    50%      { filter: brightness(1.18); }
   }
 
-  /* 공이 나올 때 퍼지는 빛 */
+  /* 공이 나올 때 퍼지는 네온 링 */
   .burst {
     position: absolute;
-    inset: -30%;
+    inset: -6px;
     border-radius: 50%;
-    background: radial-gradient(circle, var(--c-glow) 0%, transparent 65%);
+    border: 3px solid var(--c-light);
+    box-shadow: 0 0 16px var(--c-main), inset 0 0 12px var(--c-main);
     animation: burst 0.8s ease-out 0.3s both;
     pointer-events: none;
   }
   @keyframes burst {
-    0%   { opacity: 0; transform: scale(0.4); }
-    40%  { opacity: 1; }
-    100% { opacity: 0; transform: scale(1.8); }
+    0%   { opacity: 0; transform: scale(0.6); }
+    30%  { opacity: 1; }
+    100% { opacity: 0; transform: scale(1.9); }
   }
 
   .status {
@@ -299,34 +323,71 @@
     font-weight: 600;
   }
   .status.done {
-    color: var(--gold);
-    text-shadow: 0 0 10px rgba(255, 213, 74, 0.6);
+    color: #fff6c2;
+    text-shadow: 0 0 6px var(--yellow), 0 0 16px rgba(255, 233, 77, 0.6);
   }
 
-  /* ---------- 버튼 ---------- */
+  /* 추첨 완료 JACKPOT 플래시 */
+  .jackpot {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translate(-50%, -50%);
+    padding: 4px 18px;
+    border-radius: 999px;
+    font-size: clamp(13px, 3.4vw, 16px);
+    font-weight: 900;
+    letter-spacing: 0.3em;
+    padding-left: calc(18px + 0.3em);
+    color: #fff8d0;
+    background: #1a0b2e;
+    border: 2px solid var(--yellow);
+    text-shadow: 0 0 6px var(--yellow);
+    box-shadow: 0 0 12px var(--yellow), inset 0 0 8px rgba(255, 233, 77, 0.4);
+    z-index: 2;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .jackpot.show { animation: jackpot 1.6s ease-out both; }
+  @keyframes jackpot {
+    0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
+    15%  { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
+    25%  { transform: translate(-50%, -50%) scale(1); }
+    30%, 40%, 50% { opacity: 0.35; }
+    35%, 45%, 55%, 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  }
+
+  /* ---------- 네온 버튼 ---------- */
   .draw-btn {
     position: relative;
     width: min(100%, 320px);
     padding: 22px 32px;
-    border: none;
+    border: 3px solid #ffd0e8;
     border-radius: 999px;
     font-family: inherit;
     font-size: clamp(20px, 5.5vw, 26px);
     font-weight: 900;
-    letter-spacing: 0.06em;
-    color: #3a1d00;
+    letter-spacing: 0.08em;
+    color: #fff;
     cursor: pointer;
-    background: linear-gradient(180deg, #fff1a8 0%, var(--gold) 45%, #f2a900 100%);
+    text-shadow: 0 0 6px #fff, 0 0 12px var(--pink);
+    background: linear-gradient(180deg, #ff5cae 0%, var(--pink) 50%, #c4106c 100%);
     box-shadow:
-      0 8px 0 #a86a00,
-      0 14px 24px rgba(0, 0, 0, 0.5),
-      0 0 30px rgba(255, 200, 50, 0.55),
-      inset 0 2px 0 rgba(255, 255, 255, 0.8);
+      0 8px 0 #7a0a44,
+      0 14px 24px rgba(0, 0, 0, 0.6),
+      0 0 22px var(--pink),
+      0 0 50px rgba(255, 45, 149, 0.55),
+      inset 0 2px 0 rgba(255, 255, 255, 0.5);
     transition: transform 0.08s ease, box-shadow 0.08s ease, filter 0.2s ease;
     user-select: none;
     -webkit-user-select: none;
     touch-action: manipulation;
     overflow: hidden;
+    animation: btnGlow 1.8s ease-in-out infinite;
+  }
+  @keyframes btnGlow {
+    0%, 100% { filter: brightness(1); }
+    50%      { filter: brightness(1.12); }
   }
   .draw-btn::before {
     content: "";
@@ -334,7 +395,7 @@
     top: 0; left: -60%;
     width: 40%;
     height: 100%;
-    background: linear-gradient(100deg, transparent, rgba(255,255,255,0.7), transparent);
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,0.55), transparent);
     transform: skewX(-20deg);
     animation: shine 3s ease-in-out infinite;
   }
@@ -342,30 +403,30 @@
     0%, 60% { left: -60%; }
     100%    { left: 130%; }
   }
-  .draw-btn:hover:not(:disabled) { filter: brightness(1.06); }
-  .draw-btn:active:not(:disabled),
-  .draw-btn.pressed {
+  .draw-btn:active:not(:disabled) {
     transform: translateY(6px) scale(0.98);
     box-shadow:
-      0 2px 0 #a86a00,
-      0 4px 10px rgba(0, 0, 0, 0.5),
-      0 0 20px rgba(255, 200, 50, 0.45),
-      inset 0 2px 0 rgba(255, 255, 255, 0.6);
+      0 2px 0 #7a0a44,
+      0 4px 10px rgba(0, 0, 0, 0.6),
+      0 0 14px var(--pink),
+      0 0 30px rgba(255, 45, 149, 0.45),
+      inset 0 2px 0 rgba(255, 255, 255, 0.4);
   }
   .draw-btn:disabled {
     cursor: not-allowed;
-    filter: grayscale(0.5) brightness(0.8);
+    animation: none;
+    filter: saturate(0.4) brightness(0.65);
   }
   .draw-btn:disabled::before { animation: none; }
   .draw-btn:focus-visible {
-    outline: 3px solid #fff;
-    outline-offset: 4px;
+    outline: 3px solid var(--cyan);
+    outline-offset: 5px;
   }
 
   footer {
     margin-top: 28px;
     font-size: 12px;
-    color: rgba(170, 179, 224, 0.55);
+    color: rgba(185, 166, 214, 0.6);
   }
 
   @media (max-width: 420px) {
@@ -373,25 +434,27 @@
     .balls { flex-wrap: nowrap; gap: 6px; }
     .stage { border-radius: 22px; padding-left: 10px; padding-right: 10px; }
     .ball::after { bottom: -12px; height: 6px; }
+    .floor { background-size: 44px 44px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .star, .spotlight, .bulbs span, .draw-btn::before, .badge .dot { animation: none !important; }
+    .floor, .spark, h1, h1 .accent, .bulbs span, .draw-btn, .draw-btn::before { animation: none !important; }
+    .spark { opacity: 0.5; }
     .ball, .ball::after { animation-duration: 0.01s !important; }
   }
 </style>
 </head>
 <body>
-  <div id="stars" aria-hidden="true"></div>
-  <div class="spotlight left" aria-hidden="true"></div>
-  <div class="spotlight right" aria-hidden="true"></div>
+  <div class="floor" aria-hidden="true"></div>
+  <div id="sparkles" aria-hidden="true"></div>
 
   <main>
-    <div class="badge"><span class="dot"></span>LIVE</div>
-    <h1>행운의 로또 추첨</h1>
-    <p class="subtitle">1부터 45까지, 오늘의 행운 번호 6개를 뽑아보세요!</p>
+    <div class="eyebrow">LUCKY · NIGHT · CASINO</div>
+    <h1>행운의 <span class="accent">로또</span></h1>
+    <p class="subtitle">1부터 45까지, 오늘 밤의 잭팟 번호 6개를 뽑아보세요!</p>
 
-    <section class="stage" aria-label="추첨 결과">
+    <section class="stage" id="stage" aria-label="추첨 결과">
+      <div class="jackpot" id="jackpot" aria-hidden="true">JACKPOT</div>
       <div class="bulbs top" aria-hidden="true"></div>
       <div class="balls" id="balls" aria-live="polite"></div>
       <p class="status" id="status">버튼을 눌러 추첨을 시작하세요</p>
@@ -409,36 +472,39 @@
   const MAX_NUMBER = 45;
   const INTERVAL_MS = 500;
 
+  const stageEl = document.getElementById('stage');
   const ballsEl = document.getElementById('balls');
   const statusEl = document.getElementById('status');
   const drawBtn = document.getElementById('drawBtn');
+  const jackpotEl = document.getElementById('jackpot');
 
-  /* ----- 별 만들기 ----- */
-  function createStars() {
-    const container = document.getElementById('stars');
+  /* ----- 네온 반짝이 ----- */
+  function createSparkles() {
+    const container = document.getElementById('sparkles');
+    const colors = ['#ff2d95', '#22e4ff', '#b05cff', '#ffe94d', '#ffffff'];
     const area = window.innerWidth * window.innerHeight;
-    const count = Math.min(220, Math.max(80, Math.round(area / 6000)));
+    const count = Math.min(90, Math.max(35, Math.round(area / 14000)));
     const frag = document.createDocumentFragment();
     for (let i = 0; i < count; i++) {
       const s = document.createElement('div');
-      const r = Math.random();
-      s.className = 'star' + (r > 0.95 ? ' sparkle' : r > 0.8 ? ' big' : '');
-      const size = r > 0.8 ? 2 + Math.random() * 2 : 1 + Math.random() * 1.5;
+      s.className = 'spark';
+      const size = 1.5 + Math.random() * 2.5;
       s.style.width = size + 'px';
       s.style.height = size + 'px';
       s.style.left = (Math.random() * 100) + '%';
-      s.style.top = (Math.random() * 100) + '%';
-      s.style.setProperty('--dur', (2 + Math.random() * 4).toFixed(2) + 's');
+      s.style.top = (Math.random() * 70) + '%';
+      s.style.setProperty('--c', colors[i % colors.length]);
+      s.style.setProperty('--dur', (2.5 + Math.random() * 4).toFixed(2) + 's');
       s.style.setProperty('--delay', (-Math.random() * 6).toFixed(2) + 's');
       frag.appendChild(s);
     }
     container.appendChild(frag);
   }
 
-  /* ----- 전구 ----- */
+  /* ----- 마키 전구 ----- */
   function createBulbs() {
     document.querySelectorAll('.bulbs').forEach(function (row) {
-      const n = window.innerWidth < 480 ? 12 : 20;
+      const n = window.innerWidth < 480 ? 12 : 21;
       for (let i = 0; i < n; i++) row.appendChild(document.createElement('span'));
     });
   }
@@ -466,11 +532,12 @@
     return pool.slice(0, BALL_COUNT).sort(function (a, b) { return a - b; });
   }
 
+  /* 1~10 노랑, 11~20 하늘, 21~30 핑크, 31~40 보라, 41~45 초록 */
   function colorClass(n) {
     if (n <= 10) return 'yellow';
-    if (n <= 20) return 'blue';
-    if (n <= 30) return 'red';
-    if (n <= 40) return 'gray';
+    if (n <= 20) return 'cyan';
+    if (n <= 30) return 'pink';
+    if (n <= 40) return 'purple';
     return 'green';
   }
 
@@ -506,6 +573,8 @@
 
     const numbers = pickNumbers();
     drawBtn.disabled = true;
+    stageEl.classList.add('drawing');
+    jackpotEl.classList.remove('show');
     statusEl.classList.remove('done');
     statusEl.textContent = '추첨 중입니다...';
     showPlaceholders();
@@ -519,7 +588,10 @@
 
         if (i === numbers.length - 1) {
           timers.push(setTimeout(function () {
-            statusEl.textContent = '🎉 이번 회차 행운 번호: ' + numbers.join(', ');
+            stageEl.classList.remove('drawing');
+            void jackpotEl.offsetWidth;
+            jackpotEl.classList.add('show');
+            statusEl.textContent = '🎰 오늘 밤의 잭팟 번호: ' + numbers.join(', ');
             statusEl.classList.add('done');
             drawBtn.disabled = false;
             drawBtn.textContent = '다시 뽑기';
@@ -531,7 +603,7 @@
 
   drawBtn.addEventListener('click', draw);
 
-  createStars();
+  createSparkles();
   createBulbs();
   showPlaceholders();
 })();
