@@ -2,10 +2,10 @@
 
 버튼을 누르면 1~45 중 겹치지 않는 번호 6개를 뽑아주는 웹앱입니다.
 
-- 만든 사람: ○○○
+- 만든 사람: lottolee
 - 만든 방법: Claude Code에게 말로 요청해서 만듦 (코드 직접 작성 0줄)
 - 사용 기술: HTML, CSS, JavaScript (index.html 파일 하나)
-- 배포 주소: https://○○○.vercel.app
+- 배포 주소: https://lottolee.vercel.app
 
 ## 기능
 - 번호 뽑기 버튼
