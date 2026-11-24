@@ -463,25 +463,40 @@ const Settings = {
 
 /* ============ voice out ============ */
 const Voice = {
-  t:null,
+  t:null, tBroken:false, log:[], warned:false, lastOk:"",
   async speak(text, lang="en", rate){
     rate = clamp(rate ?? Settings.rate, 0.7, 1.5);
     if(!text) return;
-    if(this.t){
-      try{ await this.t.speak(text, {language: lang, rate, voice: Settings.voice}); return; }
-      catch(e){ const c=e&&e.code; if(c==="not_granted"||c==="unavailable"){ this.t=null; } else { throw e; } }
+    if(this.t && !this.tBroken){
+      try{ await this.t.speak(text, {language: lang, rate, voice: Settings.voice}); this.lastOk="Claude 목소리"; return; }
+      catch(e){ const c=(e&&e.code)||"error"; if(["viewer_stopped","stopped","replaced","interrupted","hidden"].includes(c)) throw e; this.note("Claude 목소리 실패: "+c); if(c==="not_granted"||c==="unavailable"||c==="upstream_error"||c==="no_gesture") this.tBroken=true; }
     }
     return this.web(text, lang, rate);
   },
+  note(m){ this.log.push(m); this.log=this.log.slice(-4); },
+  fail(m){ this.note(m); if(!this.warned){ this.warned=true; toast("소리를 내지 못했어요. 볼륨·무음 모드를 확인하고, 설정 → 소리 테스트를 눌러 보세요."); } },
   web(text, lang, rate){
     return new Promise(res => {
-      if(!("speechSynthesis" in window)) return res();
+      if(!("speechSynthesis" in window)){ this.fail("기기 음성: 이 화면에서 지원 안 됨"); return res(); }
+      const ss = window.speechSynthesis;
       const u = new SpeechSynthesisUtterance(text);
-      u.lang = lang==="ko" ? "ko-KR" : "en-US"; u.rate = rate;
-      const v = speechSynthesis.getVoices().find(v => v.lang && v.lang.replace("_","-").startsWith(u.lang)); if(v) u.voice=v;
-      u.onend = () => res(); u.onerror = () => res();
-      speechSynthesis.cancel(); speechSynthesis.speak(u);
+      u.lang = lang==="ko" ? "ko-KR" : "en-US"; u.rate = rate; u.volume = 1;
+      try{ const vs = ss.getVoices(); const v = vs.find(v => v.lang && v.lang.replace("_","-")===u.lang) || vs.find(v => v.lang && v.lang.replace("_","-").startsWith(u.lang.slice(0,2))); if(v) u.voice=v; }catch(e){}
+      let started=false, done=false; const fin=()=>{ if(!done){ done=true; res(); } };
+      u.onstart = () => { started=true; this.lastOk="기기 목소리"; };
+      u.onend = fin;
+      u.onerror = ev => { if(!started && ev.error!=="interrupted" && ev.error!=="canceled") this.fail("기기 음성 실패: "+ev.error); fin(); };
+      try{ if(ss.speaking || ss.pending) ss.cancel(); ss.resume(); ss.speak(u); }catch(e){ this.fail("기기 음성 실패: "+e.message); fin(); }
+      setTimeout(() => { if(!started && !ss.speaking){ this.fail("기기 음성: 소리가 시작되지 않음"); fin(); } }, 3000);
+      setTimeout(fin, 4000 + text.length*120);
     });
+  },
+  async test(){
+    const out=$("#voice-diag"); this.log=[]; this.warned=true; this.lastOk="";
+    if(out) out.textContent="재생 중…";
+    try{ await this.speak("Hello! Can you hear me?", "en"); }catch(e){ this.note("중단: "+(e&&e.code)); }
+    this.warned=false;
+    if(out) out.textContent = (this.lastOk ? "✅ "+this.lastOk+"로 재생했어요. 안 들렸다면 기기 볼륨과 무음 모드를 확인하세요." : "❌ 재생하지 못했어요.") + (this.log.length ? "  ·  "+this.log.join(" / ") : "");
   },
   stop(){ if(this.t) this.t.stop().catch(()=>{}); try{ speechSynthesis.cancel(); }catch(e){} }
 };
@@ -1183,7 +1198,8 @@ function viewSettings(){
   <div class="panel stack"><div class="field"><label for="rate"><b>말하기 속도</b> <span class="muted small" id="rate-v">${Settings.rate.toFixed(2)}×</span></label><input id="rate" type="range" min="0.7" max="1.3" step="0.05" value="${Settings.rate}" data-act="rate"></div>
   <div class="field"><label for="pause"><b>따라 말하기 멈춤 시간</b> <span class="muted small" id="pause-v">${Settings.pause}초</span></label><input id="pause" type="range" min="1" max="6" step="0.5" value="${Settings.pause}" data-act="pause"></div>
   ${Voice.t?`<div class="field"><b>목소리</b><div class="chips">${voices.map(v=>`<button class="chip ${Settings.voice===v?"on":""}" data-act="voice" data-v="${v}">${v}</button>`).join("")}</div></div>`:""}
-  <button class="btn ghost" data-act="say" data-text="Customers can place an order with just a few clicks.">🔊 미리 듣기</button></div>
+  <button class="btn ghost" data-act="voice-test">🔊 소리 테스트</button><div id="voice-diag" class="small muted"></div>
+  ${Voice.t?`<div class="row"><button class="chip ${Voice.tBroken?"on":""}" data-act="voice-device">기기 목소리만 쓰기</button><span class="small muted">Claude 목소리가 안 나올 때</span></div>`:""}</div>
   <div class="panel stack"><b>연결 상태</b><div class="small">🤖 Claude (사진 분석·AI 회화): ${AI.ok()?"연결됨":"연결 안 됨"}<br>🔊 음성: ${Voice.t?"Claude 목소리":"기기 목소리"}<br>🎙️ 음성 인식: ${Mic.d?"Claude 받아쓰기":Mic.ok()?"브라우저 음성 인식":"쓸 수 없음 (스스로 확인 모드)"}<br>💾 저장: ${Store.mode==="db"?"내 Claude 계정 (나만 보기)":"이 브라우저"}</div></div>
   ${AI.standalone()?`<div class="panel stack"><div class="field"><label for="apikey"><b>Anthropic API 키</b> <span class="small muted">(Claude 밖에서 열었을 때만 필요, 이 기기에만 저장)</span></label><input id="apikey" type="password" autocomplete="off" value="${esc(Settings.apiKey)}" placeholder="sk-ant-..."></div><button class="btn" data-act="save-key">저장</button></div>`:""}
   <div class="panel stack"><b>되돌리기</b><button class="btn ghost" data-act="restore-builtin">Day 06 기본 학습 다시 보이기</button></div>
@@ -1273,6 +1289,8 @@ const A = {
     if(lid===BUILTIN.id) setMeta(m=>{ m.hidden=[...(m.hidden||[]), lid]; }); else Store.del("L_"+lid); Store.del("S_"+lid); toast("삭제했어요."); go("home"); },
   "restore-builtin"(){ setMeta(m=>{ m.hidden=(m.hidden||[]).filter(x=>x!==BUILTIN.id); }); toast("Day 06 학습을 다시 보이게 했어요."); },
   voice(el){ Settings.set("voice", el.dataset.v); render(); },
+  "voice-test"(){ Voice.test(); },
+  "voice-device"(){ Voice.tBroken=!Voice.tBroken; render(); toast(Voice.tBroken?"기기 목소리로 재생해요.":"Claude 목소리로 재생해요."); },
   "save-key"(){ const v=$("#apikey").value.trim(); try{ localStorage.setItem("pp-key", v); }catch(e){} toast(v?"키를 저장했어요.":"키를 지웠어요."); render(); }
 };
 function next(){ const D=S.drill; D.i++; D.answered=false; render(); window.scrollTo(0,0); const t=D.tasks[D.i]; if(t){ prepTask(t); if(t.type==="listen") say(itemOf(t.lid,t.iid).en); } }
