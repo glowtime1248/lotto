@@ -212,6 +212,25 @@ mark{background:var(--band);color:var(--band-ink);padding:0 3px;border-radius:3p
 .method .ic{font-size:26px}
 .method b{display:block}
 .method p{margin:2px 0 0;font-size:14px;color:var(--muted)}
+.flow{display:flex;flex-direction:column;gap:8px;background:var(--surface2);border-radius:12px;padding:12px}
+.flow-lab{font-size:12px;font-weight:700;color:var(--muted)}
+.chunks{display:flex;flex-wrap:wrap;gap:6px;align-items:stretch}
+.chunks > span:not(.ck){align-self:center;color:var(--muted)}
+.ck{display:inline-flex;flex-direction:column;gap:1px;border-radius:10px;padding:5px 10px;background:var(--surface);border:1.5px solid var(--qc,var(--line));font-size:15px;text-align:left;line-height:1.35}
+.ck small{font-size:10.5px;font-weight:700;color:var(--qc,var(--muted))}
+.ck.en-ck{font-family:var(--f-display);font-weight:600;font-size:16px}
+.ck.omit{opacity:.6;border-style:dashed}
+.tile.ck{padding:6px 10px}
+.q-who{--qc:var(--accent)} .q-do,.q-be{--qc:var(--c-art)} .q-what{--qc:var(--c-prep)} .q-where{--qc:var(--c-pl)} .q-when{--qc:var(--c-poss)} .q-why,.q-how{--qc:var(--c-un)} .q-desc{--qc:var(--muted)}
+.flow-arrow{font-size:12.5px;color:var(--accent);font-weight:700}
+.flow-tip{font-size:14px;margin:0}
+.rules{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.rules li{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;align-items:start}
+.rules .n{width:28px;height:28px;border-radius:50%;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;font-weight:800;font-family:var(--f-display);font-size:14px}
+.rules b{display:block}
+.rules p{margin:0;font-size:14px;color:var(--muted)}
+.stage{border-left:3px solid var(--line);padding-left:10px;display:flex;flex-direction:column;gap:6px}
+.stage.cur{border-color:var(--accent)}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font-size:14px;z-index:30;max-width:90vw}
 input[type=range]{width:100%;accent-color:var(--accent)}
 .field{display:flex;flex-direction:column;gap:6px}
@@ -412,6 +431,27 @@ const BUILTIN = {
  ]}
 };
 
+const QL = {who:"누가", do:"한다", be:"이다·어떠하다", what:"무엇을", where:"어디서", when:"언제", why:"왜", how:"어떻게", desc:"어떤"};
+const F = (en, ko, chunks, order, tip) => ({en, ko, chunks: chunks.map(([e,k,q])=>({en:e, ko:k, q})), order, tip});
+const BUILTIN_FLOWS = {
+ deals: F("I always use a few apps to find better deals.","난 더 좋은 가격을 찾으려고 늘 앱 몇 개를 써.",[["I","난","who"],["always","늘","how"],["use","써","do"],["a few apps","앱 몇 개를","what"],["to find better deals","더 좋은 가격을 찾으려고","why"]],[0,4,1,3,2],"한국어는 목적(찾으려고)을 앞에 두지만, 영어는 '누가-한다-무엇을'을 먼저 끝내고 목적은 to ~로 꼬리에 붙여요. always는 동사 바로 앞."),
+ compare: F("I always compare prices before I buy anything expensive.","비싼 걸 사기 전엔 항상 가격을 비교해.",[["I","나는","who"],["always","항상","how"],["compare","비교해","do"],["prices","가격을","what"],["before I buy anything expensive","비싼 걸 사기 전엔","when"]],[4,1,3,2],"한국어는 주어를 빼도 되지만 영어는 I로 시작해요. '~하기 전에' 같은 때 덩어리는 문장 끝으로."),
+ living: F("The cost of living in Seoul is really high.","서울은 생활비가 정말 비싸.",[["The cost of living","생활비가","who"],["in Seoul","서울은","where"],["is really high","정말 비싸","be"]],[1,0,2],"'서울은'은 이야기의 주제일 뿐 주어가 아니에요. 진짜 주어(생활비)를 먼저 세우고 장소 in Seoul은 그 뒤에서 꾸며요."),
+ efund: F("I'm trying to build an emergency fund this year.","올해는 비상금을 모으려고 해.",[["I","나는","who"],["'m trying to build","모으려고 해","do"],["an emergency fund","비상금을","what"],["this year","올해는","when"]],[3,2,1],"시간(올해는)은 한국어에선 맨 앞, 영어에선 맨 뒤. 핵심 '누가-한다'부터 말해요."),
+ assist: F("Many students rely on financial assistance from the government.","많은 학생들이 정부의 재정 지원에 기대.",[["Many students","많은 학생들이","who"],["rely on","기대","do"],["financial assistance","재정 지원에","what"],["from the government","정부의","desc"]],[0,3,2,1],"한국어는 '정부의 재정 지원'처럼 꾸밈말이 앞에 오지만, 영어는 financial assistance를 먼저 말하고 from the government로 뒤에서 꾸며요."),
+ value: F("This place is really good value for money.","여기 진짜 가성비 좋아.",[["This place","여기는","who"],["is","(이다)","be"],["really good value for money","진짜 가성비 좋은 곳","what"]],[0,2,1],"'가성비 좋아'를 형용사로 옮기려 하지 말고 '이곳 = 가성비 좋은 것'(be + 명사)으로 생각해요. 사물 This place가 주어!"),
+ stock: F("Is this jacket in stock in a medium?","이 재킷 미디엄 사이즈 재고 있어요?",[["Is","있어요?","be"],["this jacket","이 재킷","who"],["in stock","재고가","what"],["in a medium","미디엄 사이즈로","desc"]],[1,3,2,0],"질문은 be동사를 맨 앞으로 꺼내요. 한국어 끝의 '있어요?'가 영어에선 맨 처음."),
+ selection: F("This shop has a large selection of vintage clothes.","이 가게는 빈티지 옷이 정말 다양해.",[["This shop","이 가게는","who"],["has","갖고 있어","do"],["a large selection","다양한 종류를","what"],["of vintage clothes","빈티지 옷의","desc"]],[0,3,2,1],"한국어는 '옷이 다양하다'지만 영어는 '가게가 다양한 종류를 갖고 있다(has)'로 생각해요. 사물 주어 + have."),
+ latefee: F("I set reminders so I never pay late fees.","연체료 안 내려고 알림을 맞춰 둬.",[["I","나는","who"],["set","맞춰 둬","do"],["reminders","알림을","what"],["so I never pay late fees","연체료 안 내려고","why"]],[3,2,1],"이유·목적(안 내려고)은 한국어에선 앞, 영어에선 so ~로 뒤에 붙여요."),
+ order: F("I placed an order for new sneakers last night.","어젯밤에 새 운동화를 주문했어.",[["I","나는","who"],["placed an order","주문했어","do"],["for new sneakers","새 운동화를","what"],["last night","어젯밤에","when"]],[3,2,1],"'누가 → 주문했다'를 먼저 말하고, 무엇(for ~) → 언제 순서로 붙여요. 한국어 맨 앞의 '어젯밤에'는 맨 끝으로."),
+ priced: F("The hotel was clean and reasonably priced.","그 호텔은 깨끗하고 가격도 적당했어.",[["The hotel","그 호텔은","who"],["was","~했어","be"],["clean","깨끗하고","desc"],["and reasonably priced","가격도 적당","desc"]],[0,2,3,1],"상태를 말할 땐 be동사(was)를 먼저 세우고 형용사를 줄줄이 붙여요. 한국어 끝의 '~했어'가 영어에선 두 번째."),
+ expensive: F("Rent in this area is ridiculously expensive.","이 동네 월세는 터무니없이 비싸.",[["Rent","월세는","who"],["in this area","이 동네","where"],["is","~다","be"],["ridiculously expensive","터무니없이 비싸","desc"]],[1,0,3,2],"'이 동네 월세'처럼 앞에서 꾸미는 말은 영어에선 명사 뒤로 가요: Rent in this area."),
+ budget: F("I'm trying to stick to my budget this month.","이번 달엔 예산을 지키려고 노력 중이야.",[["I","나는","who"],["'m trying to","노력 중이야","do"],["stick to my budget","예산을 지키려고","what"],["this month","이번 달엔","when"]],[3,2,1],"'노력 중'이라는 핵심 동사가 먼저, 무엇을 노력하는지(to stick to ~)가 뒤에, 시간은 맨 끝."),
+ loan: F("I had to take out a loan to pay for school.","학비를 내려고 대출을 받아야 했어.",[["I","나는","who"],["had to take out","받아야 했어","do"],["a loan","대출을","what"],["to pay for school","학비를 내려고","why"]],[3,2,1],"'~하려고, ~때문에'는 영어에서 to ~로 문장 끝에 붙여요."),
+ bills: F("We split the utility bills between the three of us.","우리는 공과금을 셋이 나눠 내.",[["We","우리는","who"],["split","나눠 내","do"],["the utility bills","공과금을","what"],["between the three of us","셋이","how"]],[0,2,3,1],"'누가-한다-무엇을'을 먼저, '셋이서' 같은 방법은 뒤에 붙여요.")
+};
+BUILTIN.items.forEach(i => { if(BUILTIN_FLOWS[i.id]) i.flow = BUILTIN_FLOWS[i.id]; });
+
 /* ============ helpers ============ */
 const $ = (s, r=document) => r.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -481,12 +521,14 @@ const Voice = {
       const ss = window.speechSynthesis;
       const u = new SpeechSynthesisUtterance(text);
       u.lang = lang==="ko" ? "ko-KR" : "en-US"; u.rate = rate; u.volume = 1;
-      try{ const vs = ss.getVoices(); const v = vs.find(v => v.lang && v.lang.replace("_","-")===u.lang) || vs.find(v => v.lang && v.lang.replace("_","-").startsWith(u.lang.slice(0,2))); if(v) u.voice=v; }catch(e){}
+      try{ const NOV=/Albert|Bad News|Bahh|Bells|Boing|Bubbles|Cellos|Good News|Jester|Organ|Superstar|Trinoids|Whisper|Wobble|Zarvox|Eddy|Flo|Grandma|Grandpa|Reed|Rocko|Sandy|Shelley|Junior|Ralph|Fred|Kathy/i; const vs = ss.getVoices().filter(v => v.lang && v.lang.replace("_","-").startsWith(u.lang.slice(0,2)) && !NOV.test(v.name)); const pref = lang==="ko" ? /Yuna|유나|Google/ : /Samantha|Alex|Ava|Allison|Karen|Daniel|Google US English|Microsoft (Aria|Jenny|Guy)/; const v = vs.find(v=>pref.test(v.name)) || vs.find(v=>v.lang.replace("_","-")===u.lang && v.localService) || vs.find(v=>v.lang.replace("_","-")===u.lang) || vs[0]; if(v) u.voice=v; }catch(e){}
       let started=false, done=false; const fin=()=>{ if(!done){ done=true; res(); } };
       u.onstart = () => { started=true; this.lastOk="기기 목소리"; };
       u.onend = fin;
       u.onerror = ev => { if(!started && ev.error!=="interrupted" && ev.error!=="canceled") this.fail("기기 음성 실패: "+ev.error); fin(); };
-      try{ if(ss.speaking || ss.pending) ss.cancel(); ss.resume(); ss.speak(u); }catch(e){ this.fail("기기 음성 실패: "+e.message); fin(); }
+      this._u = u;
+      const start = () => { try{ ss.resume(); ss.speak(u); }catch(e){ this.fail("기기 음성 실패: "+e.message); fin(); } };
+      if(ss.speaking || ss.pending){ ss.cancel(); setTimeout(start, 120); } else start();
       setTimeout(() => { if(!started && !ss.speaking){ this.fail("기기 음성: 소리가 시작되지 않음"); fin(); } }, 3000);
       setTimeout(fin, 4000 + text.length*120);
     });
@@ -733,6 +775,7 @@ function render(){
     else if(v==="settings") html = viewSettings();
     else if(v==="methods") html = viewMethods();
     else if(v==="done") html = viewDone();
+    else if(v==="think") html = viewThink();
   }catch(e){ console.error(e); html = topbar("오류")+`<div class="panel">화면을 그리지 못했어요: ${esc(e.message)}</div>`; }
   if(S.sheet) html += sheetHTML();
   $("#app").innerHTML = html;
@@ -764,7 +807,7 @@ function viewHome(){
   </div>
   <button class="upload" data-act="add"><span class="big">📷</span><span><b>교재 사진으로 새 학습 만들기</b><span class="small muted">${AI.ok()?"촬영하거나 사진을 고르면 Claude가 표현을 읽어 학습 자료를 만들어요.":(AI.s===null && !AI.standalone() ? "Claude 연결을 확인하는 중이에요…" : "Claude 연결이 필요해요. 눌러서 방법을 확인하세요.")}</span></span></button>
   <div class="section-h"><h2>내 학습</h2><button class="chip" data-act="go" data-to="methods">🧠 이 앱의 암기법</button></div>
-  <div class="stack">${ls.map(L => { const sd=stepsDone(L.id); const keys=["cards","story","quiz","build","speak","chat"]; const s=srs(L.id); const dueN=L.items.filter(i=>s[i.id]&&s[i.id].due<=today()).length;
+  <div class="stack">${ls.map(L => { const sd=stepsDone(L.id); const keys=["cards","story","quiz","build","think","speak","chat"]; const s=srs(L.id); const dueN=L.items.filter(i=>s[i.id]&&s[i.id].due<=today()).length;
     return `<button class="lesson-card" data-act="lesson" data-lid="${esc(L.id)}"><div class="row" style="justify-content:space-between"><h3>${esc(L.title)}</h3>${dueN?`<span class="lvl due">복습 ${dueN}</span>`:""}</div><span class="small muted">${esc(L.topic||"")} · 표현 ${L.items.length}개${L.builtin?" · 올려 주신 사진에서":""}</span><div class="steps-mini">${keys.map(k=>`<i class="${sd[k]?"done":""}"></i>`).join("")}</div></button>`; }).join("")}</div>
   <p class="small muted" style="margin-top:20px">${Store.mode==="db"?"학습 기록은 내 Claude 계정에 저장돼요 (나만 볼 수 있어요).":"학습 기록은 이 브라우저에 저장돼요."}</p>`;
 }
@@ -775,6 +818,7 @@ const STEPS = [
   {k:"story", t:"스토리 기억궁전", d:"장소 순서대로 이야기 속에 넣기 (장소법·스토리법)"},
   {k:"quiz", t:"디테일 함정 퀴즈", d:"관사·전치사·s 하나 차이 고르기 (인출·오류 학습)"},
   {k:"build", t:"문장 조립", d:"단어 타일을 눌러 직접 만들기 (생성 효과)"},
+  {k:"think", t:"영어 어순으로 생각하기", d:"한국어 순서 → 누가-한다-무엇을-어디서-언제 (영어식 사고)"},
   {k:"speak", t:"소리 내어 말하기", d:"한국어를 보고 영어로 말하기 (산출 효과)"},
   {k:"chat", t:"AI와 실전 회화", d:"대화 속에서 바로 꺼내 쓰기 (전이·자기 참조)"}
 ];
@@ -815,6 +859,7 @@ function cardHTML(L, it){
     ${(it.details||[]).length?`<div class="sec"><h3>💡 놓치기 쉬운 디테일과 원리</h3>${it.details.map(d=>`<div class="detail"><b>${esc(d.k)}</b><span>${esc(d.d)}</span></div>`).join("")}</div>`:""}
     ${it.note?`<div class="note">📌 ${esc(it.note)}</div>`:""}
     ${it.ex&&it.ex.en?`<div class="sec"><h3>📖 교재 예문</h3><div class="say-line"><div><div class="ex">${highlight(it.ex.en,it)}</div><div class="small muted">${esc(it.ex.ko)}</div></div><button class="spk" data-act="say" data-text="${esc(it.ex.en)}" aria-label="예문 듣기">🔊</button></div></div>`:""}
+    ${it.flow?`<div class="sec"><h3>🧭 영어 어순으로 생각하기</h3>${flowHTML(it.flow)}</div>`:""}
     ${it.mnem?`<div class="sec"><h3>🧠 그림 연상</h3><div class="mnem">${esc(it.mnem)}</div></div>`:""}
     ${(it.talk||[]).length?`<div class="sec"><h3>🗣️ 회화에서 바로 쓰기</h3>${it.talk.map(t=>`<div class="say-line"><div><div class="ex">${highlight(t.en,it)}</div><div class="small muted">${esc(t.ko)}</div></div><button class="spk" data-act="say" data-text="${esc(t.en)}" aria-label="듣기">🔊</button></div>`).join("")}</div>`:""}
     ${it.qa&&it.qa.q?`<div class="sec"><h3>🎤 IELTS Speaking 이라면</h3><div class="say-line"><div><div class="small muted">Q. ${esc(it.qa.q)}</div><div class="ex">A. ${highlight(it.qa.a,it)}</div></div><button class="spk" data-act="say" data-text="${esc(it.qa.q+" ... "+it.qa.a)}" aria-label="듣기">🔊</button></div></div>`:""}
@@ -840,6 +885,69 @@ function viewCards(){
 }
 function sheetHTML(){ const L=lessonById(S.sheet.lid); const it=L&&L.items.find(i=>i.id===S.sheet.iid); if(!it) return ""; const keep=S.lid; S.lid=L.id; const h=cardHTML(L,it); S.lid=keep; return `<div class="sheet-wrap" data-act="close-sheet"><div class="sheet" data-stop><div class="grab"><button class="icon-btn" data-act="close-sheet" aria-label="닫기">✕</button></div>${h}</div></div>`; }
 
+/* ---------- English word order (영어식 사고) ---------- */
+const ck = (x, side) => `<span class="ck ${side==="en"?"en-ck":""} q-${esc(x.q)}"><small>${esc(QL[x.q]||"")}</small>${esc(side==="en"?x.en:x.ko)}</span>`;
+function flowHTML(fl){
+  if(!fl || !Array.isArray(fl.chunks)) return "";
+  const c=fl.chunks; const ord=(fl.order&&fl.order.length?fl.order:c.map((_,i)=>i)).filter(i=>c[i]);
+  const omitted=c.map((_,i)=>i).filter(i=>!ord.includes(i));
+  return `<div class="flow">
+    <div class="flow-lab">🇰🇷 한국어로 떠올린 순서 · ${esc(fl.ko)}</div>
+    <div class="chunks">${ord.map(i=>ck(c[i],"ko")).join("")}${omitted.map(i=>`<span class="ck omit q-${esc(c[i].q)}"><small>${esc(QL[c[i].q]||"")} · 한국어는 생략</small>${esc(c[i].ko)}</span>`).join("")}</div>
+    <div class="flow-arrow">↓ 영어는 누가 → 한다 → 무엇을 → 어디서 → 언제</div>
+    <div class="flow-lab">🇺🇸 영어 순서</div>
+    <div class="chunks">${c.map(x=>ck(x,"en")).join("")}</div>
+    ${fl.tip?`<p class="flow-tip">💡 ${esc(fl.tip)}</p>`:""}
+    <div class="row"><button class="spk wide" data-act="say" data-text="${esc(fl.en)}">🔊 영어 문장 듣기</button></div>
+  </div>`;
+}
+const THINK_RULES = [
+  ["주어부터 세워요","한국어는 '나는'을 자주 빼지만 영어는 꼭 말해요. 사람이 없으면 사물(This place, The app)이나 It을 주어로."],
+  ["동사는 두 번째","'누가 → 한다'를 먼저 정해요. 한국어 맨 끝에 있는 동사를 앞으로 끌어오는 게 영어식 사고의 핵심이에요."],
+  ["무엇을 → 어디서 → 언제","핵심을 먼저, 장소 다음에 시간. 한국어에서 맨 앞에 오는 '어젯밤에', '올해는'은 영어에선 맨 끝."],
+  ["꾸밈은 뒤에서","'정부의 재정 지원' → financial assistance from the government. 긴 설명은 명사 뒤에 붙여요."],
+  ["이유·목적은 꼬리로","'~하려고, ~때문에'는 to ~, so ~, because ~로 문장 끝에 붙여요."],
+  ["질문은 동사부터","'재고 있어요?' → Is it in stock? 한국어 끝의 '있어요?'가 영어에선 맨 앞."]
+];
+function viewThink(){
+  const L = lessonById(S.lid); const wf = L.items.filter(i=>i.flow);
+  let body = `<div class="panel stack"><div><b>번역하지 말고 영어 순서로 떠올려요</b><div class="small muted">한국어는 '…언제 - 무엇을 - 한다'로 끝에서 결정하지만, 영어는 '누가 - 한다'를 먼저 말하고 나머지를 뒤에 하나씩 붙여요. 이 순서가 몸에 배면 문장이 바로 나와요.</div></div>
+    <ol class="rules">${THINK_RULES.map(([t,d],i)=>`<li><span class="n">${i+1}</span><span><b>${esc(t)}</b><p>${esc(d)}</p></span></li>`).join("")}</ol></div>`;
+  if(!wf.length){
+    body += AI.ok() ? `<div class="panel stack" style="margin-top:14px"><b>이 학습엔 어순 자료가 아직 없어요</b><button class="btn" data-act="gen-flow" ${S.flowBusy?"disabled":""}>${S.flowBusy?"만드는 중… (1분쯤)":"🧭 영어식 사고 자료 만들기"}</button>${S.flowErr?`<p class="small" style="color:var(--bad);margin:0">${esc(S.flowErr)}</p>`:""}</div>` : `<div style="margin-top:14px">${aiMissing()}</div>`;
+  } else {
+    const ex = wf[S.idx % wf.length];
+    body += `<div class="section-h"><h2>예시: <span class="en">${esc(ex.en)}</span></h2><button class="chip" data-act="think-next">다른 예시 →</button></div>${flowHTML(ex.flow)}
+      <div class="stack" style="margin-top:14px">
+        <button class="btn block" data-act="drillmode" data-type="order">🧩 덩어리 어순 조립 · ${wf.length}문장</button>
+        <button class="btn soft block" data-act="drillmode" data-type="expand">🌱 문장 늘리기 말하기 (핵심 → 덩어리 붙이기)</button>
+        <p class="small muted" style="margin:0">말하기 단계와 AI 회화에서도 '🧭 영어 어순 힌트'와 어순 피드백이 함께 나와요.</p></div>`;
+  }
+  return topbar("영어 어순으로 생각하기", "lesson") + body;
+}
+const FLOW_SPEC = `"flow": one short everyday spoken English sentence (max 12 words) using the expression (reuse a "talk" sentence), broken into thinking chunks to train English word order: {"en": the sentence, "ko": natural Korean sentence, "chunks": [in ENGLISH order, each {"en": chunk, "ko": Korean for that chunk, "q": who|do|be|what|where|when|why|how|desc}], "order": [chunk indices in the order the natural Korean sentence says them; leave out the subject index if Korean naturally omits it], "tip": one Korean sentence (해요체) explaining the key word-order difference in THIS sentence}`;
+async function genFlows(){
+  const L = lessonById(S.lid); if(!L || L.builtin) return;
+  S.flowBusy=true; S.flowErr=""; render();
+  try{
+    const ex = JSON.stringify({id:"order", flow: BUILTIN_FLOWS.order});
+    const arr = await AI.json(`For each English expression below, create ${FLOW_SPEC}.\nExample: ${ex}\nExpressions:\n${L.items.map(i=>JSON.stringify({id:i.id, en:i.en, ko:i.ko, talk:(i.talk||[]).map(t=>t.en)})).join("\n")}\nReply with ONLY a JSON array: [{"id":"...","flow":{...}}]`);
+    const map = {}; (Array.isArray(arr)?arr:[]).forEach(x => { if(x && x.id) map[x.id] = sanitizeFlow(x.flow); });
+    const L2 = {...L, items: L.items.map(i => map[i.id] ? {...i, flow: map[i.id]} : i)};
+    Store.save("L_"+L.id, L2);
+    if(!L2.items.some(i=>i.flow)) S.flowErr = "자료를 만들지 못했어요. 다시 눌러 주세요.";
+  }catch(e){ S.flowErr = aiErr(e); }
+  S.flowBusy=false; render();
+}
+function sanitizeFlow(f){
+  if(!f || !Array.isArray(f.chunks) || f.chunks.length<2) return null;
+  const chunks = f.chunks.slice(0,8).map(c=>({en:String(c.en||"").trim(), ko:String(c.ko||""), q: QL[c.q] ? c.q : "desc"})).filter(c=>c.en);
+  if(chunks.length<2) return null;
+  const order = (Array.isArray(f.order)?f.order:[]).map(Number).filter((n,i,a)=>Number.isInteger(n) && n>=0 && n<chunks.length && a.indexOf(n)===i);
+  return {en:String(f.en||chunks.map(c=>c.en).join(" ")), ko:String(f.ko||""), chunks, order: order.length?order:chunks.map((_,i)=>i), tip:String(f.tip||"")};
+}
+function lcsRatio(a,b){ const A=a.split(" "), B=b.split(" "); const dp=Array(B.length+1).fill(0); for(const x of A){ let prev=0; for(let j=1;j<=B.length;j++){ const tmp=dp[j]; dp[j] = x===B[j-1] ? prev+1 : Math.max(dp[j], dp[j-1]); prev=tmp; } } return B.length ? dp[B.length]/B.length : 0; }
+
 /* ---------- story ---------- */
 function viewStory(){
   const L = lessonById(S.lid); const st = L.story;
@@ -861,6 +969,10 @@ function makeTask(type, lid, iid){ return {type, lid, iid}; }
 function prepTask(t){
   if(t.ready) return; t.ready=true; const it = itemOf(t.lid, t.iid);
   const q = it.quiz && (it.quiz.opts||[]).length>=2 ? it.quiz : null;
+  const fl = it.flow && Array.isArray(it.flow.chunks) && it.flow.chunks.length>1 ? it.flow : null;
+  if((t.type==="order"||t.type==="expand") && !fl) t.type = q ? "reverse" : "listen";
+  if(t.type==="order"){ let tl; for(let k=0;k<6;k++){ tl = shuffle(fl.chunks.map((c,i)=>({i, en:c.en, q:c.q}))); if(tl.some((x,j)=>x.i!==j)) break; } t.tiles=tl; t.placed=[]; }
+  if(t.type==="expand"){ const c=fl.chunks; let e=Math.max(c.findIndex(x=>x.q==="do"||x.q==="be"), c.findIndex(x=>x.q==="who")); if(e<0) e=0; t.stages=[]; for(let k=e;k<c.length;k++) t.stages.push(k); t.si=0; t.revealed=false; t.heard=""; t.anyMiss=false; }
   if((t.type==="detail"||t.type==="reverse"||t.type==="build") && !q) t.type="listen";
   if(t.type==="detail"){ t.opts = shuffle(q.opts.slice(0,4).map(o=>({t:o.t, ok:!!o.ok, why:o.why||""}))); }
   if(t.type==="reverse"){ t.opts = shuffle(q.opts.slice(0,4).map(o=>({t:o.t, ok:!!o.ok, why:o.why||""}))); }
@@ -877,7 +989,7 @@ function prepTask(t){
     t.tiles = shuffle([...words, ...distract].map((w,i)=>({w, i})));
     t.placed = [];
   }
-  if(t.type==="speak"){ const talk=(it.talk||[])[0]; t.ko = talk ? talk.ko : it.ko; t.model = talk ? talk.en : it.en; }
+  if(t.type==="speak"){ const talk=(it.talk||[])[0]; t.ko = fl ? fl.ko : talk ? talk.ko : it.ko; t.model = fl ? fl.en : talk ? talk.en : it.en; }
 }
 function startDrill(title, tasks, back, step){
   if(!tasks.length){ toast("연습할 표현이 없어요."); return; }
@@ -885,15 +997,16 @@ function startDrill(title, tasks, back, step){
 }
 function lessonDrill(type){
   const L = lessonById(S.lid); const ids = shuffle(L.items.map(i=>i.id));
-  const names = {detail:"디테일 함정 퀴즈", build:"문장 조립", speak:"소리 내어 말하기", listen:"듣고 뜻 고르기", reverse:"한→영 고르기"};
-  startDrill(names[type], ids.map(id=>makeTask(type, L.id, id)), "lesson", ({detail:"quiz", build:"build", speak:"speak"})[type]);
+  const names = {detail:"디테일 함정 퀴즈", build:"문장 조립", speak:"소리 내어 말하기", listen:"듣고 뜻 고르기", reverse:"한→영 고르기", order:"영어 어순 조립", expand:"문장 늘리기"};
+  const pool = (type==="order"||type==="expand") ? ids.filter(id=>L.items.find(i=>i.id===id).flow) : ids;
+  startDrill(names[type], pool.map(id=>makeTask(type, L.id, id)), "lesson", ({detail:"quiz", build:"build", speak:"speak", order:"think", expand:"think"})[type]);
 }
 function reviewDrill(kind){
   let pairs=[];
   if(kind==="due") pairs = dueList().slice(0,25);
   else if(kind==="mix") pairs = shuffle(allItems().filter(x=>srs(x.lid)[x.it.id])).slice(0,15).map(x=>({lid:x.lid, iid:x.it.id}));
   else { const n = {d1:1, d2:2, d7:7}[kind]; for(const L of studiedOn(addDays(today(),-n))) for(const it of L.items) pairs.push({lid:L.id, iid:it.id}); }
-  const types = ["reverse","detail","listen","build","speak"];
+  const types = ["reverse","detail","listen","order","build","speak"];
   const tasks = shuffle(pairs).map((p,i) => { const st = srs(p.lid)[p.iid]; const k = ((st&&st.reps)||0) + i; return makeTask(types[k % types.length], p.lid, p.iid); });
   const names = {due:"오늘의 복습", mix:"섞어서 복습", d1:"어제 배운 것", d2:"그저께 배운 것", d7:"일주일 전 배운 것"};
   S.lid = null; startDrill(names[kind], tasks, "home", null);
@@ -920,8 +1033,30 @@ function viewDrill(){
       <div class="slots">${placed.length?placed.map(x=>`<button class="tile" data-act="unplace" data-i="${x.i}" ${D.answered?"disabled":""}>${esc(x.w)}</button>`).join(""):'<span class="small muted">아래 타일을 순서대로 누르세요</span>'}</div>
       <div class="tiles" style="margin-top:12px">${t.tiles.map(x=>`<button class="tile ${t.placed.includes(x.i)?"used":""}" data-act="place" data-i="${x.i}" ${D.answered?"disabled":""}>${esc(x.w)}</button>`).join("")}</div>
       ${D.answered?"":`<div class="row" style="margin-top:12px"><button class="btn" data-act="build-check" ${t.placed.length?"":"disabled"}>확인</button><button class="btn ghost" data-act="build-clear">다시</button></div>`}`;
+  } else if(t.type==="order"){
+    const fl=it.flow, c=fl.chunks;
+    const tile = (x,act) => `<button class="tile ck en-ck q-${esc(x.q)} ${act==="oplace"&&t.placed.includes(x.i)?"used":""}" data-act="${act}" data-i="${x.i}" ${D.answered?"disabled":""}><small>${esc(QL[x.q]||"")}</small>${esc(x.en)}</button>`;
+    body = `<div class="eyebrow">영어 어순 조립 · 덩어리를 영어 순서로</div><p class="prompt-ko">${esc(fl.ko)}</p>
+      <div class="flow-lab">🇰🇷 한국어 순서</div><div class="chunks">${fl.order.map(i=>ck(c[i],"ko")).join("")}</div>
+      <div class="flow-arrow">↓ 누가 → 한다 → 무엇을 → 어디서 → 언제</div>
+      <div class="slots">${t.placed.length ? t.placed.map(i=>tile({i, en:c[i].en, q:c[i].q},"ounplace")).join("") : '<span class="small muted">영어 덩어리를 영어 순서대로 누르세요</span>'}</div>
+      <div class="tiles">${t.tiles.map(x=>tile(x,"oplace")).join("")}</div>
+      ${D.answered?"":`<div class="row"><button class="btn" data-act="ocheck" ${t.placed.length===c.length?"":"disabled"}>확인</button><button class="btn ghost" data-act="oclear">다시</button></div>`}`;
+  } else if(t.type==="expand"){
+    const fl=it.flow, c=fl.chunks;
+    if(D.answered){ body = `<div class="eyebrow">문장 늘리기</div><p class="prompt-ko">${esc(fl.ko)}</p>`; }
+    else {
+      const cur=t.stages[t.si], prev = t.si>0 ? t.stages[t.si-1] : -1;
+      const sofar = c.slice(0,cur+1).map(x=>x.en).join(" ");
+      body = `<div class="eyebrow">문장 늘리기 · ${t.si+1}/${t.stages.length}단계 · 핵심부터 말하고 덩어리를 뒤에 붙여요</div><p class="prompt-ko">${esc(fl.ko)}</p>
+        ${t.si>0?`<div class="stage"><div class="small muted">지금까지 만든 문장</div><div class="en ex">${esc(c.slice(0,prev+1).map(x=>x.en).join(" "))}</div></div>`:""}
+        <div class="stage cur"><div class="small muted">${t.si===0?"먼저 핵심만 영어로: 누가 + 한다":"여기에 이 덩어리를 붙여서 처음부터 다시 말해요"}</div><div class="chunks">${c.slice(prev+1,cur+1).map(x=>`<span class="ck q-${esc(x.q)}"><small>${esc(QL[x.q]||"")}?</small>${esc(x.ko)}</span>`).join("")}</div></div>
+        ${t.revealed ? `<div class="verdict ${t.miss?"no":"ok"}">${t.heard?`<p>들린 문장: “${esc(t.heard)}”</p>`:""}<b>${t.miss?"이렇게 말해요":t.heard?"좋아요! ✓":"정답"}</b><p class="en" style="font-size:18px">${esc(sofar)}</p><div class="row"><button class="spk wide" data-act="say" data-text="${esc(sofar)}">🔊 듣기</button><button class="btn" style="margin-left:auto" data-act="expand-next">${t.si<t.stages.length-1?"다음 덩어리 붙이기 →":"완성 ✓"}</button></div></div>`
+          : `${Mic.ok()?`<div class="row"><button class="mic" data-mic data-act="mic" data-ctx="expand">🎙️ 말하기</button><span id="mic-live" class="live"></span></div>`:""}<button class="${Mic.ok()?"chip":"btn"}" data-act="expand-reveal">${Mic.ok()?"음성 없이 정답 보기":"소리 내어 말한 뒤 정답 보기"}</button>`}`;
+    }
   } else if(t.type==="speak"){
-    body = `<div class="eyebrow">한국어를 보고 영어로 말하기</div><p class="prompt-ko">${esc(it.emoji||"")} ${esc(t.ko)}</p><p class="small muted">핵심 표현: ${esc(it.ko)} → 첫 글자 힌트 <b class="en">${esc(it.en.split(" ").map(w=>w[0]+"_".repeat(Math.max(0,w.length-1))).join(" "))}</b></p>
+    const hint = it.flow && t.model===it.flow.en ? (t.hint ? `<div class="flow"><div class="flow-lab">🧭 영어 순서대로 떠올리기</div><div class="chunks">${it.flow.chunks.map(x=>`<span class="ck q-${esc(x.q)}"><small>${esc(QL[x.q]||"")}</small>${esc(x.ko)}</span>`).join("<span>→</span>")}</div></div>` : (D.answered?"":`<button class="chip" data-act="hint">🧭 영어 어순 힌트 보기</button>`)) : "";
+    body = `<div class="eyebrow">한국어를 보고 영어로 말하기</div><p class="prompt-ko">${esc(it.emoji||"")} ${esc(t.ko)}</p>${hint}<p class="small muted">핵심 표현: ${esc(it.ko)} → 첫 글자 힌트 <b class="en">${esc(it.en.split(" ").map(w=>w[0]+"_".repeat(Math.max(0,w.length-1))).join(" "))}</b></p>
       ${D.answered?"":(Mic.ok()?`<div class="row"><button class="mic" data-mic data-act="mic" data-ctx="drill">🎙️ 말하기</button><span id="mic-live" class="live"></span></div><button class="chip" style="margin-top:10px" data-act="self-reveal">음성 없이 스스로 확인</button>`:`<button class="btn" data-act="self-reveal">소리 내어 말한 뒤 정답 확인</button>`)}`;
   }
   return topbar(D.title, D.back) + `<div class="progress"><i style="width:${pct}%"></i></div><div class="stack">${body}${fb}</div>`;
@@ -936,6 +1071,10 @@ function feedbackHTML(t, it){
   if(t.type==="speak"){
     if(t.self) head = `<div class="verdict ok" style="background:var(--surface2);color:var(--ink)"><b>정답</b><p class="en" style="font-size:18px">${highlight(t.model,it)}</p><div class="row"><button class="spk wide" data-act="say" data-text="${esc(t.model)}">🔊 듣기</button></div><p class="small muted">방금 말한 것과 비교해서 스스로 평가해 주세요.</p><div class="row"><button class="btn soft" data-act="self-grade" data-q="5">완벽</button><button class="btn ghost" data-act="self-grade" data-q="3">조금 헷갈림</button><button class="btn ghost" data-act="self-grade" data-q="1">못 함</button></div></div>`;
     else head = verdictHTML(it, t.heard, t.judge) + `<div class="panel"><div class="small muted">모범 문장</div><div class="say-line"><div class="ex">${highlight(t.model,it)}</div><button class="spk" data-act="say" data-text="${esc(t.model)}">🔊</button></div></div>`;
+  } else if(t.type==="order"){
+    head = (t.correct ? `<div class="verdict ok"><b>영어 순서 그대로예요! ✓</b></div>` : `<div class="verdict no"><b>순서를 다시 볼게요</b><p>아래처럼 '누가-한다'를 먼저 세워요.</p></div>`) + flowHTML(it.flow);
+  } else if(t.type==="expand"){
+    head = `<div class="verdict ${t.correct?"ok":"no"}"><b>${t.correct?"문장 완성! ✓":"완성했어요. 놓친 부분은 내일 다시 나와요."}</b></div>` + flowHTML(it.flow);
   } else if(t.type==="build"){
     head = t.correct ? `<div class="verdict ok"><b>정확해요! ✓</b><p class="en">${highlight(t.sentence,it)}</p></div>` : `<div class="verdict no"><b>아쉬워요</b><p>정답: <span class="en">${highlight(t.sentence,it)}</span></p></div>`;
   } else {
@@ -951,7 +1090,7 @@ function answer(correct, q){
   if(!t.graded){ t.graded=true; grade(t.lid, t.iid, q ?? (correct?4:1)); D.results.push({lid:t.lid, iid:t.iid, ok:correct}); }
   if(!correct && !D.requeued.has(t.lid+"/"+t.iid)){ D.requeued.add(t.lid+"/"+t.iid); D.tasks.push({type:t.type==="speak"?"reverse":t.type, lid:t.lid, iid:t.iid, retry:true, graded:true}); }
   const it = itemOf(t.lid,t.iid);
-  if(correct && t.type!=="listen") say(t.type==="build"?t.sentence: t.type==="speak"? t.model : it.en);
+  if(correct && t.type!=="listen" && t.type!=="expand") say(t.type==="build"?t.sentence: t.type==="speak"? t.model : t.type==="order" ? it.flow.en : it.en);
   if(t.type==="listen") say(it.en);
   render();
 }
@@ -982,6 +1121,7 @@ function chatRules(L){
 TARGET EXPRESSIONS (id: phrase = Korean):
 ${L.items.map(i=>`${i.id}: ${i.en} = ${i.ko}`).join("\n")}
 Each turn: reply in 1-2 short natural sentences, then ask ONE question that invites the learner to use a target expression they have not used yet.
+Also check English word order: if the learner used Korean-style order (time or reason first, missing subject, verb at the end, modifiers before the noun), show the natural English order (who → does → what → where → when) in "fixed" and explain briefly in "feedback".
 Check the learner's LAST message strictly for the small details: articles (a/an/the/none), prepositions, plural -s, countable/uncountable, -ly adverbs, the right verb (e.g. place an order, not make an order), one's → my/your.
 Reply ONLY with JSON:
 {"reply":"your English line","reply_ko":"Korean translation","feedback":"Korean, 1-2 sentences about the learner's last message: praise correct target use or explain the detail mistake and WHY; empty string at the start","fixed":"corrected learner sentence, or empty if it was correct","used":["ids of target expressions the learner used correctly in the last message"],"suggestions":[{"en":"a possible learner reply using an unused target expression","ko":"Korean","bad":false,"why":""},{"en":"...","ko":"...","bad":false,"why":""},{"en":"a reply with exactly ONE subtle detail error in a target expression","ko":"...","bad":true,"why":"Korean: what is wrong and the rule"}]}
@@ -1104,7 +1244,7 @@ Extract EVERY headword entry in reading order. For each entry give:
 If the material is a different kind (word list, dialogue), still extract the key expressions with meanings and examples (write a short natural example if none is printed).
 Also give "title" built from the page headers (e.g. "Day 06 · Money/Shopping") and "topic" (e.g. the section title).
 Do not invent entries that are not on the page. Reply with ONLY JSON: {"title":"","topic":"","items":[{"en":"","ko":"","syn":"","ant":"","note":"","ex":{"en":"","ko":""}}]}`;
-const ENRICH_EXAMPLE = JSON.stringify((({id,emoji,tokens,details,quiz,mnem,talk,qa})=>({id,emoji,tokens,details,quiz,mnem,talk,qa}))(BUILTIN.items.find(i=>i.id==="order")));
+const ENRICH_EXAMPLE = JSON.stringify((({id,emoji,tokens,details,quiz,mnem,talk,qa,flow})=>({id,emoji,tokens,details,quiz,mnem,talk,qa,flow}))(BUILTIN.items.find(i=>i.id==="order")));
 const ENRICH_PROMPT = (items) => `You are an expert English teacher for Korean adults who want to remember expressions for a long time and use them in real conversation (and IELTS Speaking/Writing).
 For EACH expression below, create study data. Write every explanation in natural, friendly Korean (해요체), short and concrete.
 Focus hard on the tiny details Korean learners miss, and explain the PRINCIPLE (why): articles a/an/the/none (모음 소리 → an), prepositions, plural -s, countable vs uncountable, -ly adverb vs adjective, past participle, the verb that collocates (place an order, not make), one's → my/your, irregular past forms.
@@ -1117,6 +1257,7 @@ Fields per expression:
 - "mnem": a vivid visual mnemonic in Korean, 1-2 sentences, starting with an emoji, that also encodes the tricky detail
 - "talk": 2 everyday spoken sentences (max 12 words each) using the expression, [{"en","ko"}]
 - "qa": {"q": an IELTS Speaking style question, "a": a natural 1-2 sentence answer using the expression}
+- ${FLOW_SPEC}
 Example output item for "place an order":
 ${ENRICH_EXAMPLE}
 Expressions:
@@ -1183,7 +1324,7 @@ function sanitizeItem(x){
   const quiz = x.quiz && Array.isArray(x.quiz.opts) && x.quiz.opts.some(o=>o.ok) && /_{2,}/.test(s(x.quiz.s)) ? {s:s(x.quiz.s), opts:x.quiz.opts.slice(0,4).map(o=>({t:s(o.t), ok:!!o.ok, why:s(o.why)}))} : null;
   return {id:x.id, en:x.en, ko:x.ko, emoji:s(x.emoji).slice(0,8)||"📌", syn:s(x.syn), ant:s(x.ant), note:s(x.note), ex:{en:s(x.ex&&x.ex.en), ko:s(x.ex&&x.ex.ko)}, tokens,
     details:(Array.isArray(x.details)?x.details:[]).slice(0,5).map(d=>({k:s(d.k), d:s(d.d)})), quiz, mnem:s(x.mnem),
-    talk:(Array.isArray(x.talk)?x.talk:[]).slice(0,3).map(t=>({en:s(t.en), ko:s(t.ko)})).filter(t=>t.en), qa: x.qa&&x.qa.q ? {q:s(x.qa.q), a:s(x.qa.a)} : null};
+    talk:(Array.isArray(x.talk)?x.talk:[]).slice(0,3).map(t=>({en:s(t.en), ko:s(t.ko)})).filter(t=>t.en), qa: x.qa&&x.qa.q ? {q:s(x.qa.q), a:s(x.qa.a)} : null, flow: sanitizeFlow(x.flow)};
 }
 function sanitizeStory(st, items){
   if(!st || !Array.isArray(st.scenes)) return null;
@@ -1214,6 +1355,7 @@ function viewMethods(){
     ["🔬","정교화 · 원리 이해","'왜 an인지, 왜 s인지'를 알면 외울 양이 줄고 새 표현에도 적용돼요. 디테일 해부와 원리 설명."],
     ["🧩","청킹 (덩어리 기억)","place / an / order를 따로 외우지 않고 한 덩어리로 소리 내 외워요. 콜로케이션 그대로."],
     ["⚠️","오류 기반 학습","s 하나, 관사 하나만 다른 함정 보기를 일부러 틀려 보고 이유를 확인하면 같은 실수를 덜 해요."],
+    ["🧭","어순 전환 훈련 (영어식 사고)","한국어 순서(…언제-무엇을-한다)를 영어 순서(누가-한다-무엇을-어디서-언제)로 바꾸는 덩어리 조립과 '핵심부터 말하고 덩어리 붙이기' 연습. 번역하지 않고 영어 순서대로 떠올리는 습관을 만들어요."],
     ["✍️","생성 효과","정답을 보는 것보다 직접 조립해 만들 때 더 오래 남아요. 문장 조립 타일."],
     ["🗣️","산출 효과 · 섀도잉","소리 내어 말한 단어가 눈으로만 본 단어보다 잘 기억돼요. 따라 말하기·말하기 퀴즈."],
     ["🔀","인터리빙","여러 날의 표현과 문제 유형을 섞으면 구별하는 힘이 길러져요. 복습 세션."],
@@ -1240,6 +1382,7 @@ const A = {
     else if(k==="quiz") lessonDrill("detail");
     else if(k==="build") lessonDrill("build");
     else if(k==="speak") lessonDrill("speak");
+    else if(k==="think") go("think", {idx:0});
     else if(k==="chat"){ go("chat", {chat:{turns:[], msgs:[], used:new Set(), sugg:[], busy:false}}); if(AI.ok()) chatCall(); }
   },
   "card-prev"(){ S.idx=Math.max(0,S.idx-1); render(); window.scrollTo(0,0); },
@@ -1257,22 +1400,32 @@ const A = {
   unplace(el){ const t=S.drill.tasks[S.drill.i]; t.placed = t.placed.filter(i=>i!==+el.dataset.i); render(); },
   "build-clear"(){ const t=S.drill.tasks[S.drill.i]; t.placed=[]; render(); },
   "build-check"(){ const t=S.drill.tasks[S.drill.i]; const got=t.placed.map(i=>t.tiles.find(x=>x.i===i).w.toLowerCase()); answer(got.join(" ")===t.answer.join(" ")); },
+  oplace(el){ const t=S.drill.tasks[S.drill.i]; const i=+el.dataset.i; if(!t.placed.includes(i)){ t.placed.push(i); render(); } },
+  ounplace(el){ const t=S.drill.tasks[S.drill.i]; t.placed=t.placed.filter(i=>i!==+el.dataset.i); render(); },
+  oclear(){ S.drill.tasks[S.drill.i].placed=[]; render(); },
+  ocheck(){ const t=S.drill.tasks[S.drill.i]; const c=itemOf(t.lid,t.iid).flow.chunks; answer(t.placed.map(i=>c[i].en).join(" ")===c.map(x=>x.en).join(" ")); },
+  hint(){ S.drill.tasks[S.drill.i].hint=true; render(); },
+  "expand-reveal"(){ const t=S.drill.tasks[S.drill.i]; const c=itemOf(t.lid,t.iid).flow.chunks; t.revealed=true; t.heard=""; t.miss=false; render(); say(c.slice(0,t.stages[t.si]+1).map(x=>x.en).join(" ")); },
+  "expand-next"(){ const t=S.drill.tasks[S.drill.i]; if(t.si<t.stages.length-1){ t.si++; t.revealed=false; t.heard=""; t.miss=false; render(); } else answer(!t.anyMiss, t.anyMiss?2:4); },
+  "think-next"(){ S.idx++; render(); },
+  "gen-flow"(){ genFlows(); },
   "self-reveal"(){ const t=S.drill.tasks[S.drill.i]; t.self=true; S.drill.answered=true; render(); say(t.model); },
   "self-grade"(el){ const q=+el.dataset.q; const D=S.drill; const t=D.tasks[D.i]; t.self=false; t.heard=""; t.judge={ok:q>=4, issues: q>=4?[]:["스스로 평가: 다시 연습이 필요해요."]};
     if(!t.graded){ t.graded=true; grade(t.lid,t.iid,q); D.results.push({lid:t.lid,iid:t.iid,ok:q>=4}); if(q<4 && !D.requeued.has(t.lid+"/"+t.iid)){ D.requeued.add(t.lid+"/"+t.iid); D.tasks.push({type:"reverse", lid:t.lid, iid:t.iid, graded:true}); } }
     t.correct=q>=4; next(); },
   next(){ next(); },
-  "after-step"(){ const L=lessonById(S.lid); const sd=stepsDone(L.id); const core=["cards","story","quiz","build","speak"]; if(core.every(k=>sd[k])){ learnItems(L.id); go("done"); } else go("lesson"); },
+  "after-step"(){ const L=lessonById(S.lid); const sd=stepsDone(L.id); const core=["cards","story","quiz","build","think","speak"]; if(core.every(k=>sd[k])){ learnItems(L.id); go("done"); } else go("lesson"); },
   mic(el){
     const ctx=el.dataset.ctx;
     if(ctx==="shadow"){ const L=lessonById(el.dataset.lid || (S.sheet&&S.sheet.lid) || S.lid); const it=L && L.items.find(i=>i.id===el.dataset.id); Mic.toggle(text => { const box=$("#mic-result"); if(box && it) box.innerHTML = verdictHTML(it, text, judgeSpeech(it, text)); }); }
     else if(ctx==="drill"){ Mic.toggle(text => { const D=S.drill; const t=D.tasks[D.i]; if(!t || D.answered) return; const it=itemOf(t.lid,t.iid); t.heard=text; t.judge=judgeSpeech(it,text); if(t.judge.empty){ toast("소리가 들리지 않았어요. 다시 눌러 말해 보세요."); return; } answer(t.judge.ok, t.judge.ok?5:2); }); }
+    else if(ctx==="expand"){ Mic.toggle(text => { const D=S.drill; const t=D.tasks[D.i]; if(!t || D.answered || t.type!=="expand") return; if(!text){ toast("소리가 들리지 않았어요. 다시 눌러 말해 보세요."); return; } const c=itemOf(t.lid,t.iid).flow.chunks; const target=norm(c.slice(0,t.stages[t.si]+1).map(x=>x.en).join(" ")); const got=norm(text); const ok = got.includes(target) || lcsRatio(got, target)>=0.85; t.heard=text; t.miss=!ok; if(!ok) t.anyMiss=true; t.revealed=true; render(); if(!ok) say(c.slice(0,t.stages[t.si]+1).map(x=>x.en).join(" ")); }); }
     else if(ctx==="chat"){ Mic.toggle(text => { if(text) chatSend(text); else toast("소리가 들리지 않았어요."); }); }
   },
   sugg(el){ const C=S.chat; const s=C.sugg[+el.dataset.k]; if(!s) return; if(s.bad){ s.revealed=true; render(); toast("함정이에요! 이유를 확인해 보세요."); return; } chatSend(s.en); },
   "chat-retry"(){ chatCall(); },
   hands(){ const lid = S.lid || (lessons()[0]&&lessons()[0].id); go("hands", {lid, hf:{lid, i:0, round:1, playing:false, ko:true, ex:true, shuffle:false}}); },
-  "hf-toggle"(){ const H=S.hf; H.playing=!H.playing; H.stop=false; if(!H.playing) Voice.stop(); render(); if(H.playing) hfLoop(); },
+  "hf-toggle"(){ const H=S.hf; H.playing=!H.playing; H.stop=false; if(!H.playing) Voice.stop(); else unlockTTS(); render(); if(H.playing) hfLoop(); },
   "hf-next"(){ const H=S.hf; const L=lessonById(H.lid); H.i=(H.i+1)%L.items.length; Voice.stop(); render(); },
   "hf-prev"(){ const H=S.hf; const L=lessonById(H.lid); H.i=(H.i-1+L.items.length)%L.items.length; Voice.stop(); render(); },
   "hf-ko"(){ S.hf.ko=!S.hf.ko; render(); }, "hf-ex"(){ S.hf.ex=!S.hf.ex; render(); },
@@ -1312,6 +1465,11 @@ $("#photo-input").addEventListener("change", ev => {
 document.addEventListener("keydown", ev => { if(ev.key==="Escape" && S.sheet){ S.sheet=null; render(); } });
 
 /* ============ boot ============ */
+try{ if(navigator.audioSession) navigator.audioSession.type = "playback"; }catch(e){}
+function unlockTTS(){ if(Voice.unlocked || !("speechSynthesis" in window)) return; Voice.unlocked = true; try{ const u = new SpeechSynthesisUtterance(" "); u.volume = 0; u.lang = "en-US"; Voice._unlock = u; speechSynthesis.speak(u); }catch(e){} }
+document.addEventListener("touchend", unlockTTS, {passive:true});
+document.addEventListener("pointerup", unlockTTS, {passive:true});
+try{ speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged = () => {}; }catch(e){}
 render();
 (async () => {
   useCap("tts").then(t => { if(t){ Voice.t=t; render(); } });
