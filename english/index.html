@@ -1,0 +1,1304 @@
+<title>Phrase Palace</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* Layout: one phone-width study column; the book's tan highlighter band marks every English phrase, violet ink marks actions. */
+:root{
+  --bg:#f5f4fa; --surface:#ffffff; --surface2:#efedf6; --ink:#1d1a2b; --muted:#696480; --line:#e1deec;
+  --accent:#5a3fd0; --accent-soft:#e9e4ff; --on-accent:#ffffff;
+  --band:#ecdfc1; --band-ink:#3a2e12;
+  --c-art:#d4492f; --c-prep:#0f8577; --c-pl:#b57a00; --c-poss:#c02f86; --c-un:#4f6386; --c-verb:#5a3fd0;
+  --good:#18864b; --good-soft:#dcf3e5; --bad:#cc3b3b; --bad-soft:#fbe3e3;
+  --sc-sky:#dce8f8; --sc-wall:#efe8dc; --sc-floor:#dccbb0; --sc-wood:#b4895a; --sc-dark:#3c3552; --sc-a:#c8b8ff; --sc-b:#ffd6a0; --sc-c:#a6dfd2; --sc-tag:#1d1a2b; --sc-tag-ink:#ffffff;
+  --f-display:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#13111a; --surface:#1c1926; --surface2:#262233; --ink:#ece9f6; --muted:#a49eb9; --line:#2f2a3d;
+  --accent:#9f8aff; --accent-soft:#2c2550; --on-accent:#14101f;
+  --band:#4a3e25; --band-ink:#f4e7c6;
+  --c-art:#ff8a73; --c-prep:#4fd1bf; --c-pl:#f0b73d; --c-poss:#f07bc0; --c-un:#9fb3d6; --c-verb:#b3a3ff;
+  --good:#4fd18a; --good-soft:#163527; --bad:#ff7b7b; --bad-soft:#3d1c1f;
+  --sc-sky:#26324a; --sc-wall:#2c2834; --sc-floor:#3a3127; --sc-wood:#7a5a38; --sc-dark:#0e0c14; --sc-a:#4a3f80; --sc-b:#6a4a26; --sc-c:#245349; --sc-tag:#ece9f6; --sc-tag-ink:#13111a;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#13111a; --surface:#1c1926; --surface2:#262233; --ink:#ece9f6; --muted:#a49eb9; --line:#2f2a3d;
+  --accent:#9f8aff; --accent-soft:#2c2550; --on-accent:#14101f;
+  --band:#4a3e25; --band-ink:#f4e7c6;
+  --c-art:#ff8a73; --c-prep:#4fd1bf; --c-pl:#f0b73d; --c-poss:#f07bc0; --c-un:#9fb3d6; --c-verb:#b3a3ff;
+  --good:#4fd18a; --good-soft:#163527; --bad:#ff7b7b; --bad-soft:#3d1c1f;
+  --sc-sky:#26324a; --sc-wall:#2c2834; --sc-floor:#3a3127; --sc-wood:#7a5a38; --sc-dark:#0e0c14; --sc-a:#4a3f80; --sc-b:#6a4a26; --sc-c:#245349; --sc-tag:#ece9f6; --sc-tag-ink:#13111a;
+  color-scheme:dark}
+*{box-sizing:border-box}
+html,body{background:var(--bg);color:var(--ink)}
+body{font-family:var(--f-body);font-size:15px;line-height:1.6;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+#app{max-width:720px;margin:0 auto}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.2;margin:0}
+.en{font-family:var(--f-display);font-weight:600;letter-spacing:-.01em}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.stack{display:flex;flex-direction:column;gap:12px}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;align-items:center;gap:10px;padding-block:12px;border-bottom:1px solid var(--line);margin-bottom:16px}
+.top h1{font-size:18px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.icon-btn{border:1px solid var(--line);background:var(--surface);border-radius:999px;width:40px;height:40px;display:grid;place-items:center;font-size:18px;flex:none}
+.btn{border:0;border-radius:12px;padding:12px 16px;background:var(--accent);color:var(--on-accent);font-weight:700;font-size:15px;display:inline-flex;align-items:center;gap:8px;justify-content:center}
+.btn.ghost{background:var(--surface);color:var(--ink);border:1px solid var(--line);font-weight:500}
+.btn.soft{background:var(--accent-soft);color:var(--accent)}
+.btn.block{width:100%}
+.btn[disabled]{opacity:.45;cursor:default}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.eyebrow{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.brand{padding-block:22px 6px}
+.brand h1{font-size:30px;font-weight:800;letter-spacing:-.02em}
+.brand h1 span{background:linear-gradient(transparent 55%,var(--band) 55%);padding:0 4px}
+.brand p{margin:6px 0 0;color:var(--muted)}
+.today{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-block:16px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px}
+.stat b{display:block;font-family:var(--f-display);font-size:26px;font-variant-numeric:tabular-nums;line-height:1.1}
+.stat span{font-size:12px;color:var(--muted)}
+.review-cta{display:flex;flex-direction:column;gap:10px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 12px;font-size:13px}
+.chip.on{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.upload{display:flex;gap:14px;align-items:center;border:2px dashed var(--accent);background:var(--accent-soft);border-radius:var(--r);padding:16px;width:100%;text-align:left;margin-block:8px 20px}
+.upload .big{font-size:30px}
+.upload b{display:block;font-size:16px;color:var(--accent)}
+.lesson-card{display:flex;flex-direction:column;gap:8px;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+.lesson-card h3{font-size:18px}
+.steps-mini{display:flex;gap:4px}
+.steps-mini i{flex:1;height:6px;border-radius:3px;background:var(--surface2)}
+.steps-mini i.done{background:var(--accent)}
+.section-h{display:flex;justify-content:space-between;align-items:baseline;margin-block:22px 10px}
+.section-h h2{font-size:18px}
+/* course */
+.course{display:flex;flex-direction:column;gap:8px}
+.step{display:grid;grid-template-columns:36px minmax(0,1fr) auto;gap:12px;align-items:center;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px}
+.step .n{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--surface2);font-family:var(--f-display);font-weight:800}
+.step.done .n{background:var(--accent);color:var(--on-accent)}
+.step b{display:block}
+.step small{color:var(--muted);font-size:12px}
+.modes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.mode{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:left}
+.mode b{display:block}
+.mode small{color:var(--muted);font-size:12px}
+.item-list{display:flex;flex-direction:column;gap:6px}
+.item-row{display:flex;justify-content:space-between;gap:10px;align-items:center;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.item-row .en{font-size:16px}
+.lvl{font-size:11px;padding:2px 8px;border-radius:999px;background:var(--surface2);color:var(--muted);white-space:nowrap}
+.lvl.due{background:var(--bad-soft);color:var(--bad)}
+.lvl.ok{background:var(--good-soft);color:var(--good)}
+/* card */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:16px}
+.card-head{display:flex;gap:14px;align-items:flex-start}
+.card-emoji{font-size:44px;line-height:1;flex:none;width:64px;height:64px;display:grid;place-items:center;background:var(--surface2);border-radius:16px}
+.band{background:var(--band);color:var(--band-ink);border-radius:6px 14px 14px 6px;padding:8px 12px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 12px;align-items:baseline}
+.band .en{font-size:24px;line-height:1.15}
+.band .ko{font-size:14px;font-weight:700}
+.syn{font-size:13px;color:var(--accent);margin-top:6px}
+.tokens{display:flex;flex-wrap:wrap;gap:6px 4px;align-items:flex-end}
+.tok{display:flex;flex-direction:column;align-items:center;border:0;background:none;padding:2px 4px}
+.tok .w{font-family:var(--f-display);font-size:22px;font-weight:600;border-bottom:3px solid var(--line);padding:0 2px;line-height:1.3}
+.tok .rl{font-size:10.5px;color:var(--muted);margin-top:2px;white-space:nowrap}
+.tok.art .w{color:var(--c-art);border-color:var(--c-art)}
+.tok.prep .w{color:var(--c-prep);border-color:var(--c-prep)}
+.tok.poss .w{color:var(--c-poss);border-color:var(--c-poss)}
+.tok.verb .w{border-color:var(--c-verb)}
+.tok.un .w{border-bottom-style:dashed;border-color:var(--c-un)}
+.tok .s{color:var(--c-pl);background:color-mix(in srgb,var(--c-pl) 18%,transparent);border-radius:3px}
+.tok.pl .w{border-color:var(--c-pl)}
+.legend{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:11.5px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:3px;vertical-align:middle;margin-right:4px;border-radius:2px}
+.sec{display:flex;flex-direction:column;gap:8px}
+.sec h3{font-size:14px;font-family:var(--f-body);font-weight:700}
+.detail{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 10px;padding:10px 12px;background:var(--surface2);border-radius:10px}
+.detail b{font-size:13px;white-space:nowrap;color:var(--accent)}
+.detail span{font-size:14px}
+.ex{font-size:16px}
+mark{background:var(--band);color:var(--band-ink);padding:0 3px;border-radius:3px}
+.say-line{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}
+.say-line > div{min-width:0}
+.spk{border:1px solid var(--line);background:var(--surface);border-radius:999px;min-width:36px;height:36px;display:inline-grid;place-items:center;font-size:15px;flex:none;padding:0 8px}
+.spk.wide{padding:0 12px;gap:6px;display:inline-flex;align-items:center}
+.note{font-size:13px;background:var(--accent-soft);color:var(--accent);border-radius:8px;padding:8px 10px}
+.mnem{font-size:15px;background:color-mix(in srgb,var(--band) 50%,var(--surface));border-radius:10px;padding:10px 12px}
+.pager{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:14px}
+.dots{display:flex;gap:4px;flex-wrap:wrap;justify-content:center;min-width:0}
+.dots i{width:7px;height:7px;border-radius:50%;background:var(--line)}
+.dots i.on{background:var(--accent)}
+/* mic */
+.mic{border:0;background:var(--accent);color:var(--on-accent);border-radius:999px;padding:12px 18px;font-weight:700;display:inline-flex;align-items:center;gap:8px}
+.mic.on{background:var(--bad);animation:pulse 1.2s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 10px color-mix(in srgb,var(--bad) 20%,transparent)}}
+@media (prefers-reduced-motion: reduce){.mic.on{animation:none}}
+.live{font-size:15px;min-height:24px;color:var(--muted)}
+.verdict{border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.verdict.ok{background:var(--good-soft);color:var(--good)}
+.verdict.no{background:var(--bad-soft);color:var(--bad)}
+.verdict p{margin:0;color:var(--ink)}
+/* drills */
+.progress{height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;margin-bottom:16px}
+.progress i{display:block;height:100%;background:var(--accent)}
+.q{font-size:20px;font-family:var(--f-display);font-weight:600;line-height:1.4}
+.q .blank{display:inline-block;min-width:90px;border-bottom:3px solid var(--accent);margin:0 4px}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{text-align:left;background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:13px 14px;font-family:var(--f-display);font-size:17px;font-weight:600}
+.opt.kor{font-family:var(--f-body);font-weight:500;font-size:16px}
+.opt.right{border-color:var(--good);background:var(--good-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt .why{display:block;font-family:var(--f-body);font-weight:400;font-size:13px;margin-top:4px;color:var(--ink)}
+.slots{min-height:56px;border:1.5px dashed var(--line);border-radius:12px;padding:8px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.tiles{display:flex;flex-wrap:wrap;gap:6px}
+.tile{background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:8px 12px;font-family:var(--f-display);font-weight:600;font-size:16px}
+.tile.used{visibility:hidden}
+.slots .tile{background:var(--accent-soft);border-color:transparent}
+.prompt-ko{font-size:19px;font-weight:700}
+/* story */
+.route{display:flex;gap:4px;align-items:center;overflow-x:auto;padding-bottom:4px}
+.route a{flex:none;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 10px;font-size:13px;white-space:nowrap}
+.route span{color:var(--muted);flex:none}
+.scene-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden;scroll-margin-top:80px}
+.scene{display:block;width:100%;height:auto;max-width:100%}
+.scene .sky{fill:var(--sc-sky)} .scene .wall{fill:var(--sc-wall)} .scene .floor{fill:var(--sc-floor)} .scene .wood{fill:var(--sc-wood)} .scene .dark{fill:var(--sc-dark)} .scene .a{fill:var(--sc-a)} .scene .b{fill:var(--sc-b)} .scene .c{fill:var(--sc-c)}
+.scene .tag{cursor:pointer} .scene .tag rect{fill:var(--sc-tag)} .scene .tag text{fill:var(--sc-tag-ink);font:600 10px var(--f-display)}
+.scene .prop{font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
+.scene-body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:10px}
+.scene-body h3{font-size:17px}
+.narr{font-size:16px;line-height:1.85}
+.ph{border:0;background:var(--band);color:var(--band-ink);font-family:var(--f-display);font-weight:600;border-radius:4px;padding:0 5px;font-size:inherit;line-height:1.5}
+.ph.blank{background:var(--surface2);color:var(--muted);border:1.5px dashed var(--muted)}
+.en-story{font-size:14px;color:var(--muted);border-left:3px solid var(--line);padding-left:10px}
+/* sheet */
+.sheet-wrap{position:fixed;inset:0;background:color-mix(in srgb,#000 45%,transparent);z-index:20;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--bg);width:100%;max-width:720px;max-height:88vh;overflow:auto;border-radius:20px 20px 0 0;padding:14px max(16px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.sheet .grab{display:flex;justify-content:flex-end;margin-bottom:8px}
+/* chat */
+.msgs{display:flex;flex-direction:column;gap:10px}
+.msg{max-width:88%;border-radius:16px;padding:10px 14px;display:flex;flex-direction:column;gap:4px}
+.msg.ai{background:var(--surface);border:1px solid var(--line);align-self:flex-start}
+.msg.me{background:var(--accent-soft);align-self:flex-end}
+.msg .t{font-size:16px}
+.msg .k{font-size:13px;color:var(--muted)}
+.fb{font-size:13px;background:var(--surface2);border-radius:8px;padding:6px 8px}
+.target{font-size:12px;padding:4px 9px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-family:var(--f-display);font-weight:600}
+.target.used{background:var(--good-soft);color:var(--good);border-color:transparent}
+.sugg{display:flex;flex-direction:column;gap:6px}
+.sugg button{text-align:left;background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:10px 12px}
+.sugg button .en{display:block;font-size:15px}
+.sugg button small{color:var(--muted)}
+.sugg button.bad{border-color:var(--bad);background:var(--bad-soft)}
+/* hands-free */
+.hf{text-align:center;display:flex;flex-direction:column;gap:14px;align-items:center;padding-block:20px}
+.hf .card-emoji{width:96px;height:96px;font-size:60px}
+.hf .en{font-size:30px}
+.hf .phase{font-size:13px;color:var(--accent);font-weight:700;min-height:20px}
+.hf-ctrl{display:flex;gap:10px;justify-content:center}
+.big-round{width:72px;height:72px;border-radius:50%;border:0;background:var(--accent);color:var(--on-accent);font-size:28px}
+/* add */
+.thumbs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.thumbs img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:10px;max-width:100%}
+.prog-list{display:flex;flex-direction:column;gap:6px}
+.prog-list div{display:flex;gap:8px;align-items:center;font-size:14px}
+.check-item{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.check-item.off{opacity:.4;text-decoration:line-through}
+.check-item .box{flex:none;width:22px;height:22px;border-radius:6px;border:2px solid var(--accent);display:grid;place-items:center;font-size:13px;color:var(--on-accent)}
+.check-item:not(.off) .box{background:var(--accent)}
+.method{display:grid;grid-template-columns:40px minmax(0,1fr);gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}
+.method .ic{font-size:26px}
+.method b{display:block}
+.method p{margin:2px 0 0;font-size:14px;color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font-size:14px;z-index:30;max-width:90vw}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.field{display:flex;flex-direction:column;gap:6px}
+.field input[type=password],.field input[type=text]{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:10px 12px;font:inherit}
+.done-hero{text-align:center;padding-block:24px;display:flex;flex-direction:column;gap:10px;align-items:center}
+.done-hero .em{font-size:56px}
+.schedule{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.schedule span{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:4px 8px;font-size:12px;font-variant-numeric:tabular-nums}
+</style>
+
+<div id="app"></div>
+<input type="file" id="photo-input" accept="image/*" multiple hidden>
+
+<script>
+"use strict";
+/* ============ Built-in lesson: IELTS Vocabulary Day 06 · Money/Shopping (from the photographed pages 122–125) ============ */
+const BUILTIN = {
+ id:"day06-money", title:"Day 06 · Money/Shopping", topic:"Collocations for Writing & Speaking", builtin:true, createdAt:"2026-11-24",
+ items:[
+ {id:"deals",en:"better deals",ko:"더 나은 거래(상품)",emoji:"🏷️",syn:"",ant:"",note:"",
+  ex:{en:"Price comparison websites help consumers discover better deals and make informed choices.",ko:"가격 비교 웹사이트는 소비자가 더 나은 거래를 발견하고 정보에 입각한 선택을 할 수 있도록 돕는다."},
+  tokens:[{t:"better",r:"adj"},{t:"deals",r:"pl"}],
+  details:[{k:"deals의 s",d:"deal은 셀 수 있는 명사예요. 여러 할인·거래를 두루 말하니 복수 deals. 하나만 말하면 관사가 필요해요: a better deal ✔ / better deal ✗"},
+   {k:"better = 이미 비교급",d:"good의 비교급이라 more better ✗. '훨씬 더'는 much better deals."},
+   {k:"동사 짝꿍",d:"find / get / look for / discover better deals. 회화에서는 get이 가장 흔해요."}],
+  quiz:{s:"Price comparison websites help consumers discover ___ .",opts:[{t:"better deals",ok:true,why:"셀 수 있는 명사 deal의 복수형으로 여러 거래를 일반적으로 말해요."},{t:"better deal",why:"deal은 셀 수 있는 명사라 단수로 쓰려면 a가 필요해요 (a better deal)."},{t:"a better deals",why:"a는 단수 명사에만 붙어요. 복수 deals와 함께 못 써요."},{t:"more better deals",why:"better가 이미 비교급이라 more를 겹쳐 쓰지 않아요."}]},
+  mnem:"🏷️ 할인 딜러(dealer) 여러 명이 줄 서서 \"내 게 더 나아(better)!\" 하고 외치는 장면. 여러 명이니 deals.",
+  talk:[{en:"I always use a few apps to find better deals.",ko:"난 더 좋은 가격을 찾으려고 늘 앱 몇 개를 써."},{en:"You can usually get better deals online.",ko:"보통 온라인에서 더 싸게 살 수 있어."}],
+  qa:{q:"Do you prefer shopping online or in stores?",a:"Mostly online, because I can compare prices and get better deals in just a few minutes."}},
+ {id:"compare",en:"compare prices",ko:"가격을 비교하다",emoji:"⚖️",syn:"",ant:"",note:"",
+  ex:{en:"Before making a purchase, it is necessary to compare prices across different websites to get the best deals.",ko:"최적의 상품을 구매하기 위해서는, 구매 전 여러 웹사이트의 가격을 비교하는 것이 필요하다."},
+  tokens:[{t:"compare",r:"verb"},{t:"prices",r:"pl"}],
+  details:[{k:"prices의 s",d:"비교하려면 가격이 최소 두 개 필요해요. 그래서 항상 복수 prices. compare the price ✗"},
+   {k:"바로 목적어",d:"compare는 타동사라 전치사 없이 목적어를 받아요: compare prices ✔ / compare with prices ✗. 대상을 덧붙일 땐 compare A with/to B."},
+   {k:"범위 across",d:"compare prices across different websites(여러 사이트 전반에서), between two shops(두 곳 사이에서)."}],
+  quiz:{s:"Before making a purchase, it is necessary to ___ across different websites.",opts:[{t:"compare prices",ok:true,why:"타동사 compare + 복수 목적어 prices."},{t:"compare price",why:"가격 하나로는 비교가 안 돼요. 복수 prices."},{t:"compare with prices",why:"compare는 바로 목적어를 받는 타동사예요."},{t:"comparing prices",why:"it is necessary to 다음엔 동사원형이 와요."}]},
+  mnem:"⚖️ 저울 양쪽 접시에 가격표가 한 장씩, 최소 두 장. 접시가 두 개니까 price에 s가 두 번째 접시처럼 붙어요.",
+  talk:[{en:"I always compare prices before I buy anything expensive.",ko:"비싼 걸 사기 전엔 항상 가격을 비교해."},{en:"Let's compare prices on a few websites first.",ko:"먼저 웹사이트 몇 군데서 가격을 비교해 보자."}],
+  qa:{q:"How do you decide what to buy?",a:"I usually compare prices on two or three websites, and then I read a few reviews."}},
+ {id:"living",en:"cost of living",ko:"생활비",emoji:"🏙️",syn:"",ant:"",note:"",
+  ex:{en:"The cost of living in urban areas is often higher due to increased housing expenses.",ko:"도시 지역의 생활비는 주거비 증가로 인해 종종 더 높다."},
+  tokens:[{t:"cost",r:"noun"},{t:"of",r:"prep"},{t:"living",r:"noun"}],
+  details:[{k:"보통 the와 함께",d:"특정 지역·시기의 생활비를 말하니 the cost of living (in Seoul). 문장 맨 앞이면 The cost of living ..."},
+   {k:"of + living",d:"전치사 of 뒤에는 명사나 동명사가 와요: cost of living ✔ / cost of live ✗"},
+   {k:"cost는 단수",d:"굳어진 표현이라 the costs of living ✗. 형용사는 high / rising cost of living."}],
+  quiz:{s:"___ in urban areas is often higher due to increased housing expenses.",opts:[{t:"The cost of living",ok:true,why:"the + 단수 cost + of + 동명사 living."},{t:"The cost of live",why:"전치사 of 뒤에 동사원형은 못 와요. 동명사 living."},{t:"The costs of living",why:"굳어진 표현이라 단수 cost. 뒤 동사 is와도 안 맞아요."},{t:"The cost for living",why:"전치사는 of로 고정이에요."}]},
+  mnem:"🏙️ 서울 빌딩 숲 위로 거대한 영수증 한 장이 펄럭여요: THE COST OF LIVING. 영수증은 한 장(단수 cost)인데 끝도 없이 길어요.",
+  talk:[{en:"The cost of living in Seoul is really high.",ko:"서울은 생활비가 정말 비싸."},{en:"The cost of living keeps going up these days.",ko:"요즘 생활비가 계속 올라."}],
+  qa:{q:"Would you like to live in a big city?",a:"Not really. The cost of living is too high, especially rent."}},
+ {id:"efund",en:"emergency fund",ko:"비상금",emoji:"🐷",syn:"contingency fund",ant:"",note:"",
+  ex:{en:"Building an emergency fund is crucial to maintain financial stability in case of unexpected expenses.",ko:"예상치 못한 지출에 대비해서 재정적 안정을 유지하기 위해 비상금을 마련하는 것이 중요하다."},
+  tokens:[{t:"an",r:"art"},{t:"emergency",r:"noun"},{t:"fund",r:"noun"}],
+  details:[{k:"an + emergency",d:"fund는 셀 수 있는 명사라 관사가 필요해요. emergency는 모음 소리로 시작하니 a가 아니라 an: build an emergency fund."},
+   {k:"앞 명사는 단수",d:"명사+명사 복합어에서 앞 명사는 형용사처럼 단수로 써요: emergencies fund ✗"},
+   {k:"동사 짝꿍",d:"build / set up / have an emergency fund. 비상금을 헐다 = dip into my emergency fund."},
+   {k:"= contingency fund",d:"같은 뜻의 격식 표현. Writing에서 같은 말 반복을 피할 때 써요."}],
+  quiz:{s:"Building ___ is crucial to maintain financial stability.",opts:[{t:"an emergency fund",ok:true,why:"셀 수 있는 단수 fund + 모음 소리 앞 an."},{t:"a emergency fund",why:"emergency는 모음 소리로 시작해서 an이에요."},{t:"emergency fund",why:"셀 수 있는 단수 명사는 관사가 필요해요."},{t:"an emergencies fund",why:"앞에서 꾸미는 명사는 단수형이에요."}]},
+  mnem:"🐷 돼지저금통 배에 달린 비상등이 '앵앵(an an)' 울려요. AN emergency fund.",
+  talk:[{en:"I'm trying to build an emergency fund this year.",ko:"올해는 비상금을 모으려고 해."},{en:"I had to dip into my emergency fund when my phone broke.",ko:"폰이 고장 나서 비상금을 헐어야 했어."}],
+  qa:{q:"Are you good at saving money?",a:"I'm getting better. I put a little into my emergency fund every month."}},
+ {id:"assist",en:"financial assistance",ko:"재정 지원",emoji:"🤝",syn:"",ant:"",note:"",
+  ex:{en:"People living below the poverty line require additional financial assistance from the government.",ko:"빈곤선 이하에 사는 사람들은 정부의 추가적인 재정 지원을 필요로 한다."},
+  tokens:[{t:"financial",r:"adj"},{t:"assistance",r:"un"}],
+  details:[{k:"셀 수 없는 명사",d:"assistance는 불가산 명사: assistances ✗, an assistance ✗. 양은 some / additional / more financial assistance."},
+   {k:"형용사 financial",d:"명사 앞에는 형용사 financial: finance assistance ✗"},
+   {k:"from / for",d:"financial assistance from the government (주는 쪽) / for students (받는 쪽)."}],
+  quiz:{s:"People living below the poverty line require additional ___ from the government.",opts:[{t:"financial assistance",ok:true,why:"형용사 financial + 불가산 assistance."},{t:"financial assistances",why:"assistance는 셀 수 없어서 s가 붙지 않아요."},{t:"a financial assistance",why:"셀 수 없는 명사에는 a를 못 붙여요."},{t:"finance assistance",why:"명사를 꾸미는 건 형용사 financial이에요."}]},
+  mnem:"🤝 정부가 수도꼭지처럼 돈을 '부어' 주는 장면. 물처럼 붓는 건 셀 수 없으니 s도 a도 없어요.",
+  talk:[{en:"Many students rely on financial assistance from the government.",ko:"많은 학생들이 정부 재정 지원에 기대."},{en:"You can apply for financial assistance online.",ko:"재정 지원은 온라인으로 신청할 수 있어."}],
+  qa:{q:"What should the government do for young people?",a:"I think it should offer more financial assistance for housing, because rent is so expensive."}},
+ {id:"value",en:"good value for money",ko:"가격 대비 좋은 품질, 좋은 가성비",emoji:"🍲",syn:"",ant:"poor value for money",note:"",
+  ex:{en:"The restaurant offers delicious dishes that are good value for money, making it a favourite among locals.",ko:"이 레스토랑은 좋은 가성비로 맛있는 요리를 제공하여, 현지인들 사이에 선호되는 곳이다."},
+  tokens:[{t:"good",r:"adj"},{t:"value",r:"un"},{t:"for",r:"prep"},{t:"money",r:"un"}],
+  details:[{k:"전치사 for",d:"'낸 돈에 대한' 가치라서 value for money. value of money는 '화폐 가치'라는 다른 뜻이에요."},
+   {k:"관사 없이",d:"be good value for money: 영국식·IELTS에서는 관사 없이 써요. It's good value for money."},
+   {k:"s 없음",d:"value, money 둘 다 여기선 셀 수 없어요: good values for moneys ✗"},
+   {k:"강도 조절",d:"great / excellent value for money, 반대는 poor value for money."}],
+  quiz:{s:"The restaurant offers delicious dishes that are ___ , making it a favourite among locals.",opts:[{t:"good value for money",ok:true,why:"value + for + money, 관사·s 없이."},{t:"good value of money",why:"value of money는 '화폐 가치'예요. 가성비는 for."},{t:"good values for money",why:"이 표현의 value는 셀 수 없어서 s가 없어요."},{t:"good value for moneys",why:"money는 셀 수 없는 명사예요."}]},
+  mnem:"🍲 9천 원 국밥 그릇에서 '₩ → 👍' 화살표가 나와요. 돈을 '위해(for)' 내놓은 만큼 가치가 돌아온다: value FOR money.",
+  talk:[{en:"This place is really good value for money.",ko:"여기 진짜 가성비 좋아."},{en:"The lunch set was great value for money.",ko:"점심 세트 가성비 최고였어."}],
+  qa:{q:"Where do you like to eat out?",a:"There's a small restaurant near my place. It's simple, but it's really good value for money."}},
+ {id:"stock",en:"in stock",ko:"재고가 있는",emoji:"📦",syn:"available",ant:"out of stock (= unavailable) 재고가 없는",note:"",
+  ex:{en:"Many online stores display real-time information about products that are currently in stock.",ko:"많은 온라인 상점들은 현재 재고가 있는 제품에 대한 실시간 정보를 보여준다."},
+  tokens:[{t:"in",r:"prep"},{t:"stock",r:"noun"}],
+  details:[{k:"관사 없이",d:"in stock ✔ / in the stock ✗. 상태를 나타내는 '전치사 + 관사 없는 명사' 패턴이에요: in stock, in use, on sale, in time."},
+   {k:"반대는 out of",d:"재고 없음은 out of stock. 다시 들어오면 back in stock."},
+   {k:"stock은 단수",d:"in stocks ✗. have something in stock (~의 재고가 있다)."}],
+  quiz:{s:"Many online stores show products that are currently ___ .",opts:[{t:"in stock",ok:true,why:"상태 표현: 전치사 in + 관사 없는 stock."},{t:"in the stock",why:"상태를 나타낼 땐 관사를 쓰지 않아요."},{t:"on stock",why:"전치사는 in이에요 (반대는 out of)."},{t:"in stocks",why:"stocks는 '주식'이라는 다른 뜻이 돼요."}]},
+  mnem:"📦 상자 '안(in)'에 물건이 있으면 in stock, 상자 '밖으로(out of)' 다 빠지면 out of stock. 상자에는 라벨(관사)이 없어요.",
+  talk:[{en:"Is this jacket in stock in a medium?",ko:"이 재킷 미디엄 사이즈 재고 있어요?"},{en:"Sorry, it's out of stock right now.",ko:"죄송해요, 지금 품절이에요."}],
+  qa:{q:"What do you do when something you want is sold out?",a:"I sign up for an alert, so I know when it's back in stock."}},
+ {id:"selection",en:"large selection",ko:"다양한 상품",emoji:"📚",syn:"wide variety of goods",ant:"",note:"",
+  ex:{en:"The bookstore offers a large selection of novels, catering to various literary tastes.",ko:"그 서점은 여러 문학적 취향에 맞는 다양한 상품의 소설을 제공한다."},
+  tokens:[{t:"a",r:"art"},{t:"large",r:"adj"},{t:"selection",r:"noun"},{t:"of",r:"prep"}],
+  details:[{k:"a ... of 세트",d:"a large selection of + 명사: 관사 a와 전치사 of가 한 세트예요. large selection of ✗"},
+   {k:"뒤 명사는 복수",d:"a large selection of novels ✔ / of novel ✗ (여러 권 중에서 고르니까)."},
+   {k:"바꿔쓰기",d:"a wide selection of / a wide variety of / a wide range of. Writing에서 반복을 피할 때 써요."}],
+  quiz:{s:"The bookstore offers ___ novels, catering to various literary tastes.",opts:[{t:"a large selection of",ok:true,why:"관사 a + large selection + of + 복수명사."},{t:"large selection of",why:"selection은 셀 수 있는 단수라 a가 필요해요."},{t:"a large selection",why:"뒤에 명사를 이으려면 of가 필요해요."},{t:"a large selections of",why:"a 뒤에는 단수 selection이에요."}]},
+  mnem:"📚 끝없이 이어진 책장의 양 끝을 'a'와 'of'가 북엔드처럼 잡고 있어요: [a] large selection [of] novels.",
+  talk:[{en:"This shop has a large selection of vintage clothes.",ko:"이 가게는 빈티지 옷이 정말 다양해."},{en:"The app offers a large selection of recipes.",ko:"그 앱엔 레시피가 다양하게 있어."}],
+  qa:{q:"What kind of shops do you like?",a:"I like big bookstores because they have a large selection of books."}},
+ {id:"latefee",en:"late fee",ko:"연체료",emoji:"⏰",syn:"",ant:"",note:"",
+  ex:{en:"It is essential to be aware of the due date for payment to avoid late fees.",ko:"연체료를 피하기 위해 결제 기한을 숙지하는 것이 중요하다."},
+  tokens:[{t:"late",r:"adj"},{t:"fees",r:"pl"}],
+  details:[{k:"일반론은 복수",d:"to avoid late fees: 연체료 일반을 말할 땐 복수. 한 건이면 a late fee (I had to pay a late fee)."},
+   {k:"late는 형용사",d:"'늦은' 수수료라서 late. lately(최근에) fee ✗"},
+   {k:"동사 짝꿍",d:"pay / avoid / charge / waive a late fee (waive = 면제하다)."}],
+  quiz:{s:"It is essential to know the due date to avoid ___ .",opts:[{t:"late fees",ok:true,why:"연체료 일반을 말하니 복수."},{t:"late fee",why:"fee는 셀 수 있어서 단수면 a가 필요해요. 일반론은 복수 fees."},{t:"lately fees",why:"lately는 '최근에'라는 부사예요."},{t:"a late fees",why:"a는 단수 명사에만 붙어요."}]},
+  mnem:"⏰ 시계 바늘이 마감을 넘기는 순간 동전(fee)이 '와르르' 여러 개 떨어져요. 여러 개니까 fees.",
+  talk:[{en:"I set reminders so I never pay late fees.",ko:"연체료 안 내려고 알림을 맞춰 둬."},{en:"The library charges a late fee for overdue books.",ko:"도서관은 늦게 반납한 책에 연체료를 받아."}],
+  qa:{q:"Do you ever forget to pay bills?",a:"Once I did, and I had to pay a late fee. Now I use automatic payments."}},
+ {id:"order",en:"place an order",ko:"주문하다",emoji:"🛒",syn:"",ant:"",note:"유의: make나 do 동사를 쓰지 않도록 유의",
+  ex:{en:"Customers can place an order for products with just a few clicks, making online shopping a convenient experience.",ko:"고객은 몇 번의 클릭만으로 제품을 주문할 수 있어, 온라인 쇼핑을 편리한 경험으로 만든다."},
+  tokens:[{t:"place",r:"verb"},{t:"an",r:"art"},{t:"order",r:"noun"}],
+  details:[{k:"동사는 place",d:"주문하다 = place an order. make an order ✗ / do an order ✗. 동사 order만 써도 돼요: I ordered it online."},
+   {k:"a가 아닌 an",d:"order는 모음 소리 /ɔː/로 시작해서 an order."},
+   {k:"for / with",d:"place an order for + 상품, with + 회사: place an order for shoes with that shop."},
+   {k:"과거형",d:"I placed an order yesterday. (규칙 변화 -d)"}],
+  quiz:{s:"Customers can ___ for products with just a few clicks.",opts:[{t:"place an order",ok:true,why:"동사 place + an + order."},{t:"make an order",why:"책의 유의 사항: 주문은 make가 아니라 place와 짝이에요."},{t:"place a order",why:"order는 모음 소리로 시작해서 an."},{t:"place order",why:"셀 수 있는 단수 order에는 관사가 필요해요."}]},
+  mnem:"🛒 주문서를 계산대 위에 탁 '놓는(place)' 손. 버튼에는 an이 새겨져 있고, make와 do는 문 앞에서 입장 금지.",
+  talk:[{en:"I placed an order for new sneakers last night.",ko:"어젯밤에 새 운동화를 주문했어."},{en:"Can I place an order for pickup?",ko:"포장 주문할 수 있나요?"}],
+  qa:{q:"How often do you shop online?",a:"Almost every week. It's so easy to place an order on my phone."}},
+ {id:"priced",en:"reasonably priced",ko:"적정한 가격의, 합리적인 가격의",emoji:"💳",syn:"affordable",ant:"",note:"",
+  ex:{en:"Many online stores have gained popularity for their wide selection of reasonably priced items and efficient delivery services.",ko:"많은 온라인 상점들이 적정한 가격의 다양한 상품과 효율적인 배송 서비스로 인기를 얻어왔다."},
+  tokens:[{t:"reasonably",r:"adv"},{t:"priced",r:"pp"}],
+  details:[{k:"부사 -ly",d:"priced(형용사처럼 쓰는 분사)를 꾸미는 건 부사라서 reasonably. reasonable priced ✗"},
+   {k:"priced = 가격이 매겨진",d:"수동의 과거분사예요. reasonably price ✗ / reasonably pricing ✗"},
+   {k:"위치",d:"명사 앞(reasonably priced items)이나 be 뒤(The hotel is reasonably priced)."},
+   {k:"바꿔쓰기",d:"affordable, fairly priced, competitively priced."}],
+  quiz:{s:"Many online stores are popular for their ___ items.",opts:[{t:"reasonably priced",ok:true,why:"부사 reasonably + 과거분사 priced."},{t:"reasonable priced",why:"분사 priced를 꾸미는 건 부사(-ly)예요."},{t:"reasonably price",why:"'가격이 매겨진'이라는 수동 의미라 과거분사 priced."},{t:"reasonably pricing",why:"-ing는 '가격을 매기는'이라는 능동 의미예요."}]},
+  mnem:"💳 가격표(priced)에 -ly 꼬리표가 대롱대롱 매달려 있어요: reason(이성) + ably, 이성적인 가격.",
+  talk:[{en:"The hotel was clean and reasonably priced.",ko:"그 호텔은 깨끗하고 가격도 적당했어."},{en:"Their coffee is reasonably priced for this area.",ko:"이 동네치고 거기 커피값이 합리적이야."}],
+  qa:{q:"What's important to you when you choose a hotel?",a:"Location, mostly. But it should also be reasonably priced."}},
+ {id:"expensive",en:"ridiculously expensive",ko:"터무니없이 비싼",emoji:"😱",syn:"",ant:"ridiculously cheap",note:"활용법: Speaking 또는 General Training Writing의 Informal letter에서 사용",
+  ex:{en:"The restaurant was ridiculously expensive in spite of its exceptional quality.",ko:"이 레스토랑은 뛰어난 품질에도 불구하고 터무니없이 비쌌다."},
+  tokens:[{t:"ridiculously",r:"adv"},{t:"expensive",r:"adj"}],
+  details:[{k:"부사 + 형용사",d:"형용사 expensive를 꾸미니 부사 ridiculously. ridiculous expensive ✗"},
+   {k:"구어체 표현",d:"Speaking과 GT 편지용이에요. Academic Writing에서는 extremely / prohibitively expensive."},
+   {k:"같은 틀",d:"ridiculously cheap / ridiculously easy. 과장해서 강조할 때 써요."}],
+  quiz:{s:"The steak cost $150. The restaurant was ___ !",opts:[{t:"ridiculously expensive",ok:true,why:"부사 + 형용사."},{t:"ridiculous expensive",why:"형용사를 꾸미는 건 부사(-ly)예요."},{t:"ridiculously expense",why:"expense는 명사예요. be 뒤에는 형용사 expensive."},{t:"ridiculously expensively",why:"be동사 뒤에는 형용사가 와요."}]},
+  mnem:"😱 메뉴판을 본 손님의 비명이 \"리디큘러스~리!\" 하고 길게 늘어져요. 비명이 길어서 -ly까지 붙어요.",
+  talk:[{en:"Rent in this area is ridiculously expensive.",ko:"이 동네 월세는 터무니없이 비싸."},{en:"The tickets were ridiculously expensive, so we didn't go.",ko:"표가 말도 안 되게 비싸서 안 갔어."}],
+  qa:{q:"Is there anything you think is too expensive?",a:"Concert tickets. They're ridiculously expensive these days."}},
+ {id:"budget",en:"stick to one's budget",ko:"예산을 고수하다",emoji:"📒",syn:"",ant:"",note:"활용법: Speaking 또는 General Training Writing의 Informal letter에서 사용",
+  ex:{en:"It is important to stick to your budget for regular expenses such as rent, groceries and utility bills.",ko:"임대료, 식료품비, 공과금과 같은 정기적인 지출에 대해서는 예산을 고수하는 것이 중요하다."},
+  tokens:[{t:"stick",r:"verb"},{t:"to",r:"prep"},{t:"one's",r:"poss"},{t:"budget",r:"noun"}],
+  details:[{k:"전치사 to",d:"stick to = ~을 꼭 지키다. stick your budget ✗ / stick on your budget ✗"},
+   {k:"one's 바꾸기",d:"주어에 맞춰 소유격으로 바꿔요: I stick to my budget / She sticks to her budget."},
+   {k:"budget은 단수",d:"한 사람의 예산은 하나의 계획이라 my budget. my budgets ✗"},
+   {k:"불규칙 과거",d:"stick – stuck – stuck: I stuck to my budget last month."}],
+  quiz:{s:"It is important to ___ for regular expenses such as rent and groceries.",opts:[{t:"stick to your budget",ok:true,why:"stick + to + 소유격 + budget."},{t:"stick your budget",why:"'고수하다'는 stick to, 전치사 to가 필요해요."},{t:"stick on your budget",why:"전치사는 to예요."},{t:"stick to the your budget",why:"소유격 your 앞에 the를 겹쳐 쓰지 않아요."}]},
+  mnem:"📒 가계부가 손바닥에 끈끈이처럼 '딱 붙어(stick)' 떨어지지 않아요. 표지에는 내 이름(my)이 적혀 있어요.",
+  talk:[{en:"I'm trying to stick to my budget this month.",ko:"이번 달엔 예산을 지키려고 노력 중이야."},{en:"It's hard to stick to your budget when you travel.",ko:"여행할 땐 예산 지키기가 어려워."}],
+  qa:{q:"How do you manage your money?",a:"I write down everything I spend, and I try to stick to my budget."}},
+ {id:"loan",en:"take out a loan",ko:"대출을 받다",emoji:"🏦",syn:"get a loan",ant:"pay off a loan (대출을 갚다)",note:"",
+  ex:{en:"Most young adults in Korea plan to take out a loan to purchase their first home.",ko:"우리나라 대부분의 젊은이들은 첫 주택 구입을 위해 대출을 받을 계획이다."},
+  tokens:[{t:"take",r:"verb"},{t:"out",r:"part"},{t:"a",r:"art"},{t:"loan",r:"noun"}],
+  details:[{k:"구동사 take out",d:"대출을 받다 = take out a loan. get a loan도 OK. take off ✗ (벗다/이륙하다)"},
+   {k:"관사 a",d:"loan은 셀 수 있는 명사라 a loan / two loans."},
+   {k:"목적은 to / for",d:"take out a loan to buy a house / for a car."},
+   {k:"과거·갚기",d:"took out a loan (불규칙 take–took–taken). 갚다 = pay off / repay a loan."}],
+  quiz:{s:"Most young adults plan to ___ to purchase their first home.",opts:[{t:"take out a loan",ok:true,why:"구동사 take out + a + loan."},{t:"take out loan",why:"셀 수 있는 단수 loan에는 a가 필요해요."},{t:"take off a loan",why:"take off는 '벗다/이륙하다'예요. 대출은 take out."},{t:"take out an loan",why:"loan은 자음 소리로 시작해서 a예요."}]},
+  mnem:"🏦 은행 금고에서 돈다발 한 묶음을 '꺼내(take out)' 오는 장면. 한 묶음이니 a loan.",
+  talk:[{en:"I had to take out a loan to pay for school.",ko:"학비 때문에 대출을 받아야 했어."},{en:"They took out a loan to buy a car.",ko:"그들은 차를 사려고 대출을 받았어."}],
+  qa:{q:"What do young people in your country spend money on?",a:"Housing, mostly. Many people take out a loan to buy their first home."}},
+ {id:"bills",en:"utility bills",ko:"공과금",emoji:"💡",syn:"",ant:"",note:"",
+  ex:{en:"Every month, residents are responsible for paying their utility bills, which cover electricity, water and gas expenses.",ko:"입주자는 매달 전기, 수도, 가스 비용을 포함하는 공과금을 납부할 책임이 있다."},
+  tokens:[{t:"utility",r:"noun"},{t:"bills",r:"pl"}],
+  details:[{k:"bills의 s",d:"전기·수도·가스 고지서가 여러 장이라 복수 bills. 뒤 동사도 복수: which cover."},
+   {k:"앞 명사는 단수",d:"꾸며 주는 앞 명사는 단수형: utilities bills ✗"},
+   {k:"동사 짝꿍",d:"pay / split / cut down on utility bills."}],
+  quiz:{s:"Every month, residents pay their ___ , which cover electricity, water and gas.",opts:[{t:"utility bills",ok:true,why:"여러 고지서라 복수, 뒤의 복수 동사 cover와도 맞아요."},{t:"utilities bills",why:"앞에서 꾸미는 명사는 단수형 utility."},{t:"utility bill",why:"뒤 동사 cover가 복수형이라 bills와 맞춰야 해요."},{t:"utility's bills",why:"소유격('s)이 아니라 명사가 명사를 꾸미는 형태예요."}]},
+  mnem:"💡🚿🔥 전구, 샤워기, 가스불이 각자 고지서를 한 장씩 들고 줄 서 있어요. 세 장이니까 bills.",
+  talk:[{en:"We split the utility bills between the three of us.",ko:"우리는 공과금을 셋이 나눠 내."},{en:"My utility bills are much higher in winter.",ko:"겨울엔 공과금이 훨씬 많이 나와."}],
+  qa:{q:"What do you spend most of your money on?",a:"Rent and utility bills, unfortunately. Heating is expensive in winter."}}
+ ],
+ story:{title:"민지의 서울 첫 달",scenes:[
+  {place:"home",title:"① 현관: 쏟아지는 고지서",items:["bills","living","latefee"],
+   ko:"서울로 막 이사 온 민지. 현관문을 열자 우편함에서 [[bills|utility bills]] 뭉치가 쏟아져요. 전기, 수도, 가스. 고지서가 여러 장이라 bill 끝에 s가 줄줄이 붙어 있어요. 민지가 한숨을 쉬어요. \"[[living|The cost of living]] in Seoul is crazy!\" 영수증은 한 장인데 끝도 없이 길어요. 벽시계가 째깍째깍 경고해요. 마감을 넘기면 동전이 와르르, [[latefee|late fees]]!",
+   en:"Minji has just moved to Seoul. When she opens the door, a pile of utility bills falls out of the mailbox. \"The cost of living in Seoul is crazy!\" she sighs. The clock on the wall ticks: pay on time, or you will get late fees.",
+   props:[{e:"📬",x:62,y:96,s:40,id:"bills"},{e:"🏙️",x:165,y:58,s:38,id:"living"},{e:"⏰",x:262,y:96,s:36,id:"latefee"},{e:"😩",x:160,y:132,s:30,id:""}]},
+  {place:"desk",title:"② 책상 위 노트북: 쇼핑 앱 세 개",items:["compare","deals","stock","order"],
+   ko:"민지는 노트북에 쇼핑 앱 세 개를 나란히 띄우고 [[compare|compare prices]] 해요. 저울 접시가 두 개라 prices. 저울이 기울며 [[deals|better deals]] 쪽을 가리켜요. 원하던 운동화 옆에 초록불이 켜져요. 상자 안에 물건이 있다는 표시, 라벨 없는 [[stock|in stock]]! 민지는 make도 do도 아닌, an이 새겨진 버튼을 눌러 [[order|place an order]].",
+   en:"Minji opens three shopping apps side by side to compare prices. A little scale tips toward the better deals. Next to the sneakers she wants, a green light says in stock. She presses the button and places an order.",
+   props:[{e:"⚖️",x:52,y:52,s:34,id:"compare"},{e:"🏷️",x:268,y:52,s:32,id:"deals"},{e:"👟",x:70,y:122,s:34,id:"stock"},{e:"🛒",x:250,y:122,s:34,id:"order"}]},
+  {place:"store",title:"③ 동네 서점: 끝없는 책장",items:["selection","priced"],
+   ko:"주문을 마친 민지는 산책하다 동네 서점에 들어가요. 책장이 끝없이 이어진 [[selection|a large selection of]] novels. 책장 양 끝을 a와 of가 북엔드처럼 붙잡고 있어요. 가격표를 보니 모두 [[priced|reasonably priced]]. 가격표마다 -ly 꼬리표가 대롱대롱 매달려 있네요. 민지는 소설 두 권을 집어 들어요.",
+   en:"After that, Minji walks to a bookstore in her neighborhood. It has a large selection of novels, and every book is reasonably priced. She picks up two novels.",
+   props:[{e:"📚",x:84,y:70,s:42,id:"selection"},{e:"💳",x:236,y:70,s:36,id:"priced"},{e:"🙂",x:160,y:132,s:30,id:""}]},
+  {place:"restaurant",title:"④ 골목 끝 두 식당",items:["expensive","value"],
+   ko:"저녁이 되자 민지는 고급 레스토랑 메뉴판을 봐요. 스테이크 한 접시에 15만 원! \"This place is [[expensive|ridiculously expensive]]!\" 비명이 길게 늘어져서 -ly까지 붙어요. 바로 옆 국밥집은 9천 원에 푸짐해요. 낸 돈을 위해(for) 가치가 돌아오는 진짜 [[value|good value for money]].",
+   en:"In the evening, Minji looks at the menu of a fancy restaurant. One steak costs 150,000 won. This place is ridiculously expensive! The small soup restaurant next door is cheap and filling. It is really good value for money.",
+   props:[{e:"🥩",x:72,y:78,s:40,id:"expensive"},{e:"🍲",x:244,y:78,s:40,id:"value"},{e:"😱",x:120,y:136,s:26,id:""},{e:"😋",x:205,y:136,s:26,id:""}]},
+  {place:"bank",title:"⑤ 은행 창구: 미래를 위한 계획",items:["efund","budget","loan","assist"],
+   ko:"다음 날 민지는 은행에 가요. 먼저 비상등이 앵앵 울리는 돼지저금통에 [[efund|an emergency fund]]를 모으기로 해요. 가계부를 손에 딱 붙이고 \"I'll [[budget|stick to my budget]].\" one's 자리에는 내 이름 my! 창구 직원은 첫 집을 살 땐 금고에서 돈다발을 꺼내듯 [[loan|take out a loan]] 할 수 있다고 알려 줘요. 벽 포스터에는 청년을 위한 정부의 [[assist|financial assistance]]. 물처럼 붓는 지원이라 s가 없어요.",
+   en:"The next day, Minji goes to the bank. She decides to build an emergency fund in a piggy bank. She writes a monthly plan and promises to stick to her budget. The clerk explains that she can take out a loan when she buys her first home. On the wall, a poster talks about financial assistance from the government for young people.",
+   props:[{e:"🐷",x:48,y:70,s:38,id:"efund"},{e:"📒",x:120,y:128,s:30,id:"budget"},{e:"🔑",x:232,y:128,s:30,id:"loan"},{e:"🤝",x:272,y:56,s:32,id:"assist"}]}
+ ]}
+};
+
+/* ============ helpers ============ */
+const $ = (s, r=document) => r.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+function dstr(d){ const z=n=>String(n).padStart(2,"0"); return d.getFullYear()+"-"+z(d.getMonth()+1)+"-"+z(d.getDate()); }
+const today = () => dstr(new Date());
+function addDays(s,n){ const [y,m,d]=s.split("-").map(Number); return dstr(new Date(y,m-1,d+n)); }
+function dayDiff(a,b){ const p=s=>{const [y,m,d]=s.split("-").map(Number);return Date.UTC(y,m-1,d)}; return Math.round((p(b)-p(a))/864e5); }
+function shuffle(a){ a=[...a]; for(let i=a.length-1;i>0;i--){ const j=Math.random()*(i+1)|0; [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function uid(){ return Math.random().toString(36).slice(2,10); }
+function withTimeout(p, ms){ return Promise.race([p, new Promise((_,rej)=>setTimeout(()=>rej(new Error("timeout")), ms))]); }
+function useCap(name){ try{ return (window.claude && typeof window.claude.use==="function") ? window.claude.use(name).then(x=>x||null, ()=>null) : Promise.resolve(null); }catch(e){ return Promise.resolve(null); } }
+function toast(msg){ const t=document.createElement("div"); t.className="toast"; t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(), 2600); }
+const norm = s => String(s||"").toLowerCase().replace(/[’‘]/g,"'").replace(/[^a-z0-9' ]+/g," ").replace(/\s+/g," ").trim();
+
+/* ============ storage (Claude db per-person, else this browser) ============ */
+const Store = {
+  mem:{}, col:null, timers:{}, mode:"local",
+  async init(){
+    try{ for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k && k.startsWith("pp:")) this.mem[k.slice(3)] = JSON.parse(localStorage.getItem(k)); } }catch(e){}
+    const [db, user] = await Promise.all([useCap("db"), useCap("user")]);
+    if(!db || !user) return;
+    let id=null; try{ id = await user.id(); }catch(e){}
+    if(!id) return;
+    try{
+      const col = db.collection("data/users/"+id);
+      const snap = await withTimeout(col.get(), 10000);
+      const remote = {};
+      snap.docs.forEach(d => { const v = d.data(); if(v && "v" in v) remote[d.id] = v.v; });
+      this.col = col; this.mode = "db";
+      for(const k in this.mem) if(!(k in remote)) this.save(k, this.mem[k]);
+      Object.assign(this.mem, remote);
+    }catch(e){ console.warn("db unavailable", e); }
+  },
+  get(k, d){ return k in this.mem ? this.mem[k] : d; },
+  keys(prefix){ return Object.keys(this.mem).filter(k => k.startsWith(prefix)); },
+  save(k, v){ this.mem[k]=v; clearTimeout(this.timers[k]); this.timers[k]=setTimeout(()=>this.flush(k), 600); },
+  async flush(k){ const v=this.mem[k]; try{ localStorage.setItem("pp:"+k, JSON.stringify(v)); }catch(e){} if(this.col){ try{ await this.col.doc(k).set({v}); }catch(e){ console.warn("save failed", k, e); } } },
+  del(k){ delete this.mem[k]; clearTimeout(this.timers[k]); try{ localStorage.removeItem("pp:"+k); }catch(e){} if(this.col) this.col.doc(k).delete().catch(()=>{}); }
+};
+const Settings = {
+  get rate(){ return Store.get("set",{}).rate ?? 0.95; },
+  get voice(){ return Store.get("set",{}).voice || "buttery"; },
+  get pause(){ return Store.get("set",{}).pause ?? 2.5; },
+  get apiKey(){ try{ return localStorage.getItem("pp-key")||""; }catch(e){ return ""; } },
+  set(k,v){ const s={...Store.get("set",{})}; s[k]=v; Store.save("set", s); }
+};
+
+/* ============ voice out ============ */
+const Voice = {
+  t:null,
+  async speak(text, lang="en", rate){
+    rate = clamp(rate ?? Settings.rate, 0.7, 1.5);
+    if(!text) return;
+    if(this.t){
+      try{ await this.t.speak(text, {language: lang, rate, voice: Settings.voice}); return; }
+      catch(e){ const c=e&&e.code; if(c==="not_granted"||c==="unavailable"){ this.t=null; } else { throw e; } }
+    }
+    return this.web(text, lang, rate);
+  },
+  web(text, lang, rate){
+    return new Promise(res => {
+      if(!("speechSynthesis" in window)) return res();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = lang==="ko" ? "ko-KR" : "en-US"; u.rate = rate;
+      const v = speechSynthesis.getVoices().find(v => v.lang && v.lang.replace("_","-").startsWith(u.lang)); if(v) u.voice=v;
+      u.onend = () => res(); u.onerror = () => res();
+      speechSynthesis.cancel(); speechSynthesis.speak(u);
+    });
+  },
+  stop(){ if(this.t) this.t.stop().catch(()=>{}); try{ speechSynthesis.cancel(); }catch(e){} }
+};
+function say(text, lang, rate){ Voice.speak(text, lang, rate).catch(()=>{}); }
+
+/* ============ voice in ============ */
+const Mic = {
+  d:null, Web: window.SpeechRecognition || window.webkitSpeechRecognition || null, rec:null,
+  active:false, buf:"", partial:"", cb:null, silT:null, maxT:null, failed:false,
+  attach(d){
+    this.d = d; if(!d) return;
+    d.onPartial(({text}) => { this.partial = text; this.live(); });
+    d.onFinal(({text}) => { this.buf += (this.buf?" ":"") + text; this.partial = ""; this.live(); });
+    d.onState(({state, reason}) => {
+      if(state==="idle"){ this.active=false; if(reason==="not_granted"||reason==="unavailable"){ this.d=null; this.failed=true; } this.finish(); }
+      this.paint();
+    });
+  },
+  ok(){ return !!(this.d || (this.Web && !this.failed)); },
+  toggle(cb){ if(this.active){ this.stop(); return; } this.start(cb); },
+  start(cb){
+    this.buf=""; this.partial=""; this.cb=cb; Voice.stop();
+    clearTimeout(this.maxT); this.maxT = setTimeout(()=>this.stop(), 20000);
+    if(this.d){
+      this.active = true; this.paint();
+      this.d.start({language:"en-US"}).catch(e => { this.active=false; if(e&&(e.code==="not_granted"||e.code==="unavailable")){ this.d=null; this.failed=!this.Web; } this.paint(); toast("마이크를 쓸 수 없어요. 스스로 말해 보고 정답 확인을 눌러 주세요."); render(); });
+      return;
+    }
+    if(this.Web){
+      const r = new this.Web(); r.lang="en-US"; r.interimResults=true; r.continuous=false;
+      r.onresult = ev => { let f="", p=""; for(const x of ev.results){ if(x.isFinal) f+=x[0].transcript; else p+=x[0].transcript; } this.buf=f; this.partial=p; this.live(); };
+      r.onerror = ev => { if(ev.error==="not-allowed"||ev.error==="service-not-allowed"){ this.failed=true; toast("마이크가 막혀 있어요. 스스로 말하기 모드로 바꿀게요."); } };
+      r.onend = () => { this.active=false; this.paint(); this.finish(); if(this.failed) render(); };
+      this.rec = r; this.active = true; this.paint();
+      try{ r.start(); }catch(e){ this.active=false; this.failed=true; this.paint(); }
+    }
+  },
+  stop(){ clearTimeout(this.silT); clearTimeout(this.maxT); if(this.d){ this.d.stop().catch(()=>{}); } else if(this.rec){ try{ this.rec.stop(); }catch(e){} } },
+  finish(){ clearTimeout(this.silT); clearTimeout(this.maxT); const text=(this.buf+" "+this.partial).trim(); const cb=this.cb; this.cb=null; if(cb) cb(text); },
+  live(){ const el=$("#mic-live"); if(el) el.textContent = (this.buf+" "+this.partial).trim() || "듣고 있어요…"; clearTimeout(this.silT); if(this.buf) this.silT=setTimeout(()=>this.stop(), 1600); },
+  paint(){ document.querySelectorAll("[data-mic]").forEach(b => { b.classList.toggle("on", this.active); b.innerHTML = this.active ? "■ 그만 말하기" : "🎙️ 말하기"; }); }
+};
+
+/* ============ Claude (artifact sample, or an API key on a stand-alone copy) ============ */
+const AI = {
+  s:null, limits:null,
+  standalone(){ return !(window.claude && typeof window.claude.use==="function"); },
+  ok(){ return !!this.s || (this.standalone() && !!Settings.apiKey); },
+  maxImages(){ return this.s ? (this.limits?.images?.maxCount || 0) : 20; },
+  async json(input, o={}){
+    if(this.s){
+      const opts = { modelTier: o.tier || "default" };
+      if(o.signal) opts.signal = o.signal;
+      if(o.images && o.images.length) opts.images = o.images;
+      if(o.cache !== undefined) opts.cache = o.cache;
+      return await this.s.json(input, opts);
+    }
+    return await this.api(input, o);
+  },
+  async api(input, o){
+    const key = Settings.apiKey; if(!key) throw {code:"no_key"};
+    const turns = typeof input==="string" ? [{role:"user",content:input}] : input;
+    const msgs = [];
+    for(const t of turns){ const last=msgs[msgs.length-1]; if(last && last.role===t.role) last.content[0].text += "\n\n"+t.content; else msgs.push({role:t.role, content:[{type:"text", text:t.content}]}); }
+    if(o.images && o.images.length){
+      const parts = await Promise.all(o.images.map(async b => ({type:"image", source:{type:"base64", media_type:"image/jpeg", data: await blobB64(b)}})));
+      msgs[msgs.length-1].content.unshift(...parts);
+    }
+    const r = await fetch("https://api.anthropic.com/v1/messages", {method:"POST", signal:o.signal, headers:{"x-api-key":key,"anthropic-version":"2023-06-01","content-type":"application/json","anthropic-dangerous-direct-browser-access":"true"}, body: JSON.stringify({model: o.tier==="quick"?"claude-haiku-5-5":"claude-sonnet-5-5", max_tokens:16000, messages:msgs})});
+    if(!r.ok) throw {code:"http_"+r.status, message: await r.text()};
+    const j = await r.json(); const text = (j.content||[]).filter(c=>c.type==="text").map(c=>c.text).join("");
+    return parseLooseJSON(text);
+  }
+};
+function blobB64(b){ return new Promise((res,rej)=>{ const fr=new FileReader(); fr.onload=()=>res(String(fr.result).split(",")[1]); fr.onerror=rej; fr.readAsDataURL(b); }); }
+function parseLooseJSON(t){
+  try{ return JSON.parse(t); }catch(e){}
+  const f = t.match(/```(?:json)?\s*([\s\S]*?)```/); if(f){ try{ return JSON.parse(f[1]); }catch(e){} }
+  const a = Math.min(...["{","["].map(c=>{const i=t.indexOf(c); return i<0?Infinity:i;})); const b = Math.max(t.lastIndexOf("}"), t.lastIndexOf("]"));
+  if(a<Infinity && b>a){ try{ return JSON.parse(t.slice(a,b+1)); }catch(e){} }
+  throw {code:"invalid_json", text:t};
+}
+function aiErr(e){
+  const c = e && e.code;
+  return ({not_granted:"Claude 사용을 허용해야 이 기능을 쓸 수 있어요. 화면 위 권한 메뉴에서 허용해 주세요.", rate_limited:"요청이 몰렸어요. 1분쯤 뒤에 다시 눌러 주세요.", invalid_json:"결과 형식이 깨져서 읽지 못했어요. 다시 시도해 주세요.", images_unavailable:"이 화면에서는 사진을 Claude에게 보낼 수 없어요.", image_rejected:"사진 파일을 읽지 못했어요. JPG나 PNG로 다시 골라 주세요.", cancelled:"중단했어요.", no_key:"설정에서 Anthropic API 키를 넣어야 해요.", prompt_too_large:"내용이 너무 길어요. 사진을 나눠서 올려 주세요."})[c] || ("Claude 요청이 실패했어요" + (c?` (${c})`:"") + ". 다시 시도해 주세요.");
+}
+
+/* ============ data access ============ */
+function lessons(){
+  const hidden = Store.get("meta",{}).hidden || [];
+  const list = Store.keys("L_").map(k => Store.get(k)).filter(Boolean).sort((a,b)=> (b.createdAt||"").localeCompare(a.createdAt||""));
+  if(!hidden.includes(BUILTIN.id)) list.push(BUILTIN);
+  return list;
+}
+function lessonById(id){ return id===BUILTIN.id ? BUILTIN : Store.get("L_"+id); }
+function itemOf(lid, iid){ const L=lessonById(lid); return L && L.items.find(i=>i.id===iid); }
+function meta(){ return Store.get("meta", {}); }
+function setMeta(fn){ const m = JSON.parse(JSON.stringify(meta())); fn(m); Store.save("meta", m); }
+function srs(lid){ return Store.get("S_"+lid, {}); }
+function markActive(){ setMeta(m => { m.days = m.days || []; if(!m.days.includes(today())) m.days.push(today()); m.days = m.days.slice(-120); }); }
+function streak(){ const days = new Set(meta().days||[]); let d = today(); if(!days.has(d)) d = addDays(d,-1); let n=0; while(days.has(d)){ n++; d=addDays(d,-1); } return n; }
+function learnItems(lid){
+  const s = {...srs(lid)}; const L = lessonById(lid); let changed=false;
+  for(const it of L.items) if(!s[it.id]){ s[it.id] = {reps:0, ef:2.5, ivl:1, due:addDays(today(),1), last:today(), lapses:0, learned:today()}; changed=true; }
+  if(changed) Store.save("S_"+lid, s);
+  setMeta(m => { m.studied = m.studied || {}; const a = m.studied[lid] = m.studied[lid] || []; if(!a.includes(today())) a.push(today()); });
+}
+function grade(lid, iid, q){
+  const s = {...srs(lid)}; const st = {...(s[iid] || {reps:0, ef:2.5, ivl:0, lapses:0, learned:today()})};
+  if(st.last===today() && st.gradedToday && q>=3) return;
+  if(q<3){ st.reps=0; st.ivl=1; st.lapses=(st.lapses||0)+1; }
+  else { st.reps=(st.reps||0)+1; st.ivl = st.reps===1 ? 1 : st.reps===2 ? 3 : Math.round(Math.max(st.ivl,1)*st.ef); }
+  st.ef = Math.max(1.3, (st.ef||2.5) + (0.1 - (5-q)*(0.08+(5-q)*0.02)));
+  st.due = addDays(today(), st.ivl); st.last = today(); st.gradedToday = true;
+  s[iid] = st; Store.save("S_"+lid, s); markActive();
+}
+function dueList(){
+  const out=[]; const t=today();
+  for(const L of lessons()){ const s=srs(L.id); for(const it of L.items){ const st=s[it.id]; if(st && st.due && st.due<=t) out.push({lid:L.id, iid:it.id, due:st.due}); } }
+  return out.sort((a,b)=>a.due.localeCompare(b.due));
+}
+function studiedOn(date){ const st = meta().studied || {}; return lessons().filter(L => (st[L.id]||[]).includes(date)); }
+function stepsDone(lid){ return (meta().steps||{})[lid] || {}; }
+function markStep(lid, step){ setMeta(m => { m.steps = m.steps || {}; m.steps[lid] = m.steps[lid] || {}; m.steps[lid][step] = today(); }); markActive(); }
+function itemLevel(lid, iid){
+  const st = srs(lid)[iid]; if(!st) return {cls:"", txt:"새 표현"};
+  if(st.due <= today()) return {cls:"due", txt:"복습 필요"};
+  if(st.reps>=3) return {cls:"ok", txt:`장기 기억 · ${dayDiff(today(),st.due)}일 뒤`};
+  return {cls:"", txt:`${dayDiff(today(),st.due)}일 뒤 복습`};
+}
+
+/* ============ phrase matching (articles, prepositions, -s matter) ============ */
+const IRR = {take:["took","taken","taking","takes"], stick:["stuck","sticking","sticks"], make:["made","making","makes"], get:["got","gotten","getting","gets"], find:["found","finding","finds"], buy:["bought","buying","buys"], pay:["paid","paying","pays"], build:["built","building","builds"], keep:["kept","keeping","keeps"], go:["went","gone","going","goes"], have:["had","has","having"], do:["did","done","doing","does"], run:["ran","running","runs"], set:["setting","sets"], put:["putting","puts"], cut:["cutting","cuts"], spend:["spent","spending","spends"], save:["saved","saving","saves"]};
+const POSS = ["my","your","his","her","their","our","its","one's"];
+function forms(w){ w=w.toLowerCase(); if(IRR[w]) return [w, ...IRR[w]]; const base = w.endsWith("e") ? w.slice(0,-1) : w; return [w, w+"s", w+"es", w+"d", w+"ed", base+"ing", base+"ed", w.replace(/y$/,"ied"), w.replace(/y$/,"ies")]; }
+function reEsc(s){ return s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"); }
+function tokenWords(item){ const t = (item.tokens && item.tokens.length) ? item.tokens : item.en.split(/\s+/).map(w=>({t:w, r:"noun"})); const out=[]; t.forEach(tk => String(tk.t).split(/\s+/).filter(Boolean).forEach(w => out.push({w, r:tk.r}))); return out; }
+function phraseRe(item, flags="i"){
+  const parts = tokenWords(item).map(({w,r}) => {
+    const lw = w.toLowerCase().replace(/[’]/g,"'");
+    if(r==="poss" || lw==="one's") return "(?:my|your|his|her|their|our|its|one's|[a-z]+'s)";
+    if(r==="verb") return "(?:"+[...new Set(forms(lw))].map(reEsc).join("|")+")";
+    return reEsc(lw);
+  });
+  return new RegExp("\\b"+parts.join("[\\s]+")+"\\b", flags);
+}
+function highlight(text, item){
+  text = String(text||""); const re = phraseRe(item, "i"); const src = text.replace(/[’]/g,"'"); const m = re.exec(src);
+  if(!m) return esc(text);
+  return esc(text.slice(0,m.index)) + "<mark>" + esc(text.slice(m.index, m.index+m[0].length)) + "</mark>" + esc(text.slice(m.index+m[0].length));
+}
+function judgeSpeech(item, text){
+  const n = norm(text);
+  if(!n) return {ok:false, empty:true, issues:[]};
+  if(phraseRe(item).test(n)) return {ok:true, issues:[]};
+  const words = n.split(" "); const issues=[];
+  for(const {w,r} of tokenWords(item)){
+    const lw = w.toLowerCase().replace(/[’]/g,"'");
+    if(r==="poss" || lw==="one's"){ if(!words.some(x=>POSS.includes(x)||/'s$/.test(x))) issues.push(`소유격(my/your/her…)이 빠졌어요. one's 자리는 주어에 맞춰 바꿔 말해요.`); continue; }
+    if(r==="verb"){ if(!words.some(x=>forms(lw).includes(x))) issues.push(`동사 '${lw}'가 들리지 않았어요. 이 표현은 ${lw}와 짝이에요.`); continue; }
+    if(words.includes(lw)) continue;
+    if(r==="pl"){ const sing = lw.replace(/(es|s)$/,""); issues.push(words.includes(sing) ? `'${sing}' 대신 복수형 '${lw}'로 말해야 해요 (끝소리 s).` : `'${lw}'가 빠졌어요.`); continue; }
+    if(r==="art"){ const other = lw==="an"?"a":lw==="a"?"an":null; issues.push(other && words.includes(other) ? `관사는 '${other}'가 아니라 '${lw}'예요.` : `관사 '${lw}'가 빠졌어요.`); continue; }
+    if(r==="prep"){ issues.push(`전치사 '${lw}'가 빠졌거나 다른 전치사를 썼어요.`); continue; }
+    issues.push(`'${lw}'가 들리지 않았어요.`);
+  }
+  if(!issues.length) issues.push("단어는 다 있는데 순서나 덧붙인 말(예: 필요 없는 the)이 달라요. 정답과 비교해 보세요.");
+  return {ok:false, issues};
+}
+const ROLE = {verb:"동사", adj:"형용사", adv:"부사(-ly)", noun:"명사", art:"관사", prep:"전치사", pl:"복수 -s", un:"셀 수 없음", poss:"소유격", pp:"과거분사", part:"부사 짝"};
+function tokensHTML(item){
+  return `<div class="tokens">${(item.tokens||[]).map(tk => {
+    const r = tk.r || "noun"; let w = esc(tk.t);
+    if(r==="pl"){ const m = String(tk.t).match(/^(.*?)(es|s)$/); if(m) w = esc(m[1])+`<span class="s">${esc(m[2])}</span>`; }
+    return `<button class="tok ${esc(r)}" data-act="tok" data-r="${esc(r)}"><span class="w">${w}</span><span class="rl">${esc(ROLE[r]||r)}</span></button>`;
+  }).join("")}</div>`;
+}
+const TOK_TIP = {art:"관사: 셀 수 있는 단수 명사 앞에는 a/an/the 중 하나가 필요해요. 모음 '소리' 앞은 an.", prep:"전치사: 숙어의 전치사는 뜻이 아니라 짝으로 외워요. 바꾸면 뜻이 달라지거나 틀려요.", pl:"복수 -s: 여러 개를 두루 말하거나 둘 이상을 비교할 땐 복수. 말할 때 끝소리 s를 꼭 내세요.", un:"셀 수 없는 명사: a/an도, -s도 붙지 않아요. 양은 some, more, additional로 말해요.", poss:"소유격: one's는 사전식 표기예요. 실제로는 my/your/his/her/their로 바꿔 말해요.", adv:"부사(-ly): 형용사나 분사를 꾸밀 땐 -ly 부사를 써요.", pp:"과거분사: '~된/매겨진'처럼 수동의 의미예요.", verb:"동사: 같은 뜻이라도 명사와 짝을 이루는 동사가 정해져 있어요 (콜로케이션).", part:"구동사의 짝: take out처럼 동사와 붙어 한 덩어리로 뜻이 생겨요.", adj:"형용사: 명사를 앞에서 꾸며요.", noun:"명사: 셀 수 있는지 먼저 확인하세요."};
+
+/* ============ scene drawing (memory-palace rooms) ============ */
+function backdrop(place){
+  const W = `<rect class="wall" x="0" y="0" width="320" height="180"/>`;
+  switch(place){
+    case "home": return W+`<rect class="sky" x="26" y="24" width="74" height="52" rx="4"/><path d="M63 24v52M26 50h74" stroke="var(--sc-wall)" stroke-width="4"/><rect class="floor" x="0" y="146" width="320" height="34"/><rect class="wood" x="214" y="30" width="70" height="116" rx="3"/><circle cx="274" cy="92" r="4" class="dark"/>`;
+    case "desk": return W+`<rect class="sky" x="230" y="14" width="74" height="44" rx="4"/><rect class="wood" x="10" y="150" width="300" height="10" rx="3"/><rect class="dark" x="110" y="64" width="100" height="62" rx="5"/><rect class="c" x="116" y="70" width="88" height="50" rx="2"/><path d="M98 148l14-20h96l14 20z" class="dark"/>`;
+    case "store": { let s=W; [44,96].forEach((y,row)=>{ s+=`<rect class="wood" x="0" y="${y+34}" width="320" height="6"/>`; let x=4; let k=row*7; while(x<316){ const w=10+(k*7%9); const h=24+(k*5%10); const cls=["a","b","c","dark"][k%4]; s+=`<rect class="${cls}" x="${x}" y="${y+34-h}" width="${w}" height="${h}" rx="1.5"/>`; x+=w+2; k++; } }); return s+`<rect class="floor" x="0" y="150" width="320" height="30"/>`; }
+    case "restaurant": return W+`<path d="M20 70a40 40 0 0 1 80 0v40H20z" class="sky"/><path d="M220 70a40 40 0 0 1 80 0v40h-80z" class="sky"/><rect class="b" x="0" y="148" width="320" height="32"/><path d="M0 148h320" stroke="var(--sc-wood)" stroke-width="3"/>`;
+    case "bank": return W+`<path d="M60 26L160 6l100 20z" class="dark"/>${[70,120,190,240].map(x=>`<rect class="a" x="${x}" y="30" width="12" height="84"/>`).join("")}<rect class="wood" x="0" y="114" width="320" height="16"/><rect class="floor" x="0" y="130" width="320" height="50"/>`;
+    case "street": case "office": return `<rect class="sky" x="0" y="0" width="320" height="180"/>${[[10,60,40],[56,30,50],[112,70,36],[154,20,60],[220,50,44],[270,36,46]].map(([x,y,w],i)=>`<rect class="${["a","dark","c","b"][i%4]}" x="${x}" y="${y}" width="${w}" height="${150-y}"/>`).join("")}<rect class="dark" x="0" y="150" width="320" height="30"/>`;
+    case "park": return `<rect class="sky" x="0" y="0" width="320" height="180"/><circle cx="270" cy="34" r="16" class="b"/><path d="M0 130q80-30 160 0t160 0v50H0z" class="c"/>`;
+    case "school": return W+`<rect class="dark" x="70" y="22" width="180" height="70" rx="4"/><rect class="floor" x="0" y="140" width="320" height="40"/>`;
+    default: return `<rect class="sky" x="0" y="0" width="320" height="180"/><rect class="floor" x="0" y="140" width="320" height="40"/>`;
+  }
+}
+function sceneSVG(sc, L){
+  const map = Object.fromEntries(L.items.map(i=>[i.id,i]));
+  const props = (sc.props||[]).slice(0,6).map(p => {
+    const x=clamp(+p.x||160,20,300), y=clamp(+p.y||90,26,150), s=clamp(+p.s||36,20,54);
+    let tag=""; const it = map[p.id];
+    if(it){ const txt = it.en.length>26 ? it.en.slice(0,25)+"…" : it.en; const w = txt.length*5.5+16; const lx = clamp(x-w/2, 3, 317-w); const ly = Math.min(y+s/2+1, 162);
+      tag = `<g class="tag" data-act="item" data-lid="${esc(L.id)}" data-id="${esc(it.id)}" role="button" aria-label="${esc(it.en)}"><rect x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" width="${w.toFixed(1)}" height="16" rx="8"/><text x="${(lx+w/2).toFixed(1)}" y="${(ly+11.4).toFixed(1)}" text-anchor="middle">${esc(txt)}</text></g>`; }
+    return `<text class="prop" x="${x}" y="${y}" font-size="${s}" text-anchor="middle" dominant-baseline="central">${esc(p.e||"")}</text>${tag}`;
+  }).join("");
+  return `<svg class="scene" viewBox="0 0 320 180" role="img" aria-label="${esc(sc.title||"")}">${backdrop(sc.place)}${props}</svg>`;
+}
+function storyText(text, L, blank){
+  const map = Object.fromEntries(L.items.map(i=>[i.id,i]));
+  const parts = String(text||"").split(/\[\[([^|\]]+)\|([^\]]+)\]\]/g);
+  let html="";
+  for(let i=0;i<parts.length;i++){
+    if(i%3===0) html += esc(parts[i]);
+    else if(i%3===1){ const id=parts[i], txt=parts[i+1]; const it=map[id];
+      html += blank ? `<button class="ph blank" data-act="reveal" data-txt="${esc(txt)}">▢ ${esc(it?it.ko:"?")}</button>` : `<button class="ph" data-act="item" data-lid="${esc(L.id)}" data-id="${esc(id)}">${esc(txt)}</button>`;
+      i++; }
+  }
+  return html;
+}
+
+/* ============ state + render ============ */
+const S = { view:"home", lid:null, idx:0, blank:false, drill:null, chat:null, hf:null, add:null, sheet:null };
+function go(view, extra={}){ Voice.stop(); if(Mic.active) Mic.stop(); if(S.hf) S.hf.stop=true; Object.assign(S, {view, sheet:null}, extra); render(); window.scrollTo(0,0); }
+function topbar(title, back="home"){ return `<div class="top"><button class="icon-btn" data-act="back" data-to="${back}" aria-label="뒤로">←</button><h1>${esc(title)}</h1><button class="icon-btn" data-act="go" data-to="settings" aria-label="설정">⚙</button></div>`; }
+function render(){
+  const v = S.view; let html="";
+  try{
+    if(v==="home") html = viewHome();
+    else if(v==="lesson") html = viewLesson();
+    else if(v==="cards") html = viewCards();
+    else if(v==="story") html = viewStory();
+    else if(v==="drill") html = viewDrill();
+    else if(v==="chat") html = viewChat();
+    else if(v==="hands") html = viewHands();
+    else if(v==="add") html = viewAdd();
+    else if(v==="settings") html = viewSettings();
+    else if(v==="methods") html = viewMethods();
+    else if(v==="done") html = viewDone();
+  }catch(e){ console.error(e); html = topbar("오류")+`<div class="panel">화면을 그리지 못했어요: ${esc(e.message)}</div>`; }
+  if(S.sheet) html += sheetHTML();
+  $("#app").innerHTML = html;
+  Mic.paint();
+}
+
+/* ---------- home ---------- */
+function viewHome(){
+  const due = dueList(); const ls = lessons();
+  const y1 = studiedOn(addDays(today(),-1)), y2 = studiedOn(addDays(today(),-2)), wk = studiedOn(addDays(today(),-7));
+  const learnedToday = ls.some(L => (stepsDone(L.id).speak===today()) || (stepsDone(L.id).quiz===today()));
+  const total = ls.reduce((n,L)=>n+Object.keys(srs(L.id)).length,0);
+  return `
+  <header class="brand"><div class="row" style="justify-content:space-between"><div class="eyebrow">사진 한 장 → 말할 수 있는 표현</div><button class="icon-btn" data-act="go" data-to="settings" aria-label="설정">⚙</button></div><h1><span>Phrase</span> Palace</h1><p>교재 사진을 올리면 표현을 뽑아 카드·스토리·퀴즈·말하기·AI 회화로 외우고, 잊을 때쯤 다시 꺼내 줘요.</p></header>
+  <div class="today">
+    <div class="stat"><b>${due.length}</b><span>오늘 복습할 표현</span></div>
+    <div class="stat"><b>${streak()}</b><span>연속 학습일</span></div>
+    <div class="stat"><b>${total}</b><span>익힌 표현</span></div>
+  </div>
+  <div class="panel review-cta">
+    <div class="row" style="justify-content:space-between"><b>${learnedToday?"오늘 공부 끝! 이제 이전 내용을 꺼내 볼 차례예요.":"간격 반복 복습"}</b><span class="small muted">1 → 3 → 7 → 16일…</span></div>
+    <button class="btn block" data-act="review" data-kind="due" ${due.length?"":"disabled"}>🔁 ${due.length?`복습 시작 · ${due.length}개`:"오늘 복습할 표현이 없어요"}</button>
+    <div class="chips">
+      <button class="chip" data-act="review" data-kind="d1" ${y1.length?"":"disabled"}>어제 배운 것 ${y1.length?"("+y1.map(l=>l.items.length).reduce((a,b)=>a+b,0)+")":"없음"}</button>
+      <button class="chip" data-act="review" data-kind="d2" ${y2.length?"":"disabled"}>그저께 배운 것 ${y2.length?"("+y2.map(l=>l.items.length).reduce((a,b)=>a+b,0)+")":"없음"}</button>
+      <button class="chip" data-act="review" data-kind="d7" ${wk.length?"":"disabled"}>일주일 전 ${wk.length?"":"없음"}</button>
+      <button class="chip" data-act="review" data-kind="mix" ${total?"":"disabled"}>전체 섞어서 15개</button>
+    </div>
+  </div>
+  <button class="upload" data-act="add"><span class="big">📷</span><span><b>교재 사진으로 새 학습 만들기</b><span class="small muted">${AI.ok()?"촬영하거나 사진을 고르면 Claude가 표현을 읽어 학습 자료를 만들어요.":(AI.s===null && !AI.standalone() ? "Claude 연결을 확인하는 중이에요…" : "Claude 연결이 필요해요. 눌러서 방법을 확인하세요.")}</span></span></button>
+  <div class="section-h"><h2>내 학습</h2><button class="chip" data-act="go" data-to="methods">🧠 이 앱의 암기법</button></div>
+  <div class="stack">${ls.map(L => { const sd=stepsDone(L.id); const keys=["cards","story","quiz","build","speak","chat"]; const s=srs(L.id); const dueN=L.items.filter(i=>s[i.id]&&s[i.id].due<=today()).length;
+    return `<button class="lesson-card" data-act="lesson" data-lid="${esc(L.id)}"><div class="row" style="justify-content:space-between"><h3>${esc(L.title)}</h3>${dueN?`<span class="lvl due">복습 ${dueN}</span>`:""}</div><span class="small muted">${esc(L.topic||"")} · 표현 ${L.items.length}개${L.builtin?" · 올려 주신 사진에서":""}</span><div class="steps-mini">${keys.map(k=>`<i class="${sd[k]?"done":""}"></i>`).join("")}</div></button>`; }).join("")}</div>
+  <p class="small muted" style="margin-top:20px">${Store.mode==="db"?"학습 기록은 내 Claude 계정에 저장돼요 (나만 볼 수 있어요).":"학습 기록은 이 브라우저에 저장돼요."}</p>`;
+}
+
+/* ---------- lesson ---------- */
+const STEPS = [
+  {k:"cards", t:"카드로 익히기", d:"그림·소리·원리를 한 번에 (이중 부호화·정교화)"},
+  {k:"story", t:"스토리 기억궁전", d:"장소 순서대로 이야기 속에 넣기 (장소법·스토리법)"},
+  {k:"quiz", t:"디테일 함정 퀴즈", d:"관사·전치사·s 하나 차이 고르기 (인출·오류 학습)"},
+  {k:"build", t:"문장 조립", d:"단어 타일을 눌러 직접 만들기 (생성 효과)"},
+  {k:"speak", t:"소리 내어 말하기", d:"한국어를 보고 영어로 말하기 (산출 효과)"},
+  {k:"chat", t:"AI와 실전 회화", d:"대화 속에서 바로 꺼내 쓰기 (전이·자기 참조)"}
+];
+function viewLesson(){
+  const L = lessonById(S.lid); if(!L) return topbar("없음")+`<div class="panel">학습을 찾지 못했어요.</div>`;
+  const sd = stepsDone(L.id);
+  const next = STEPS.find(s=>!sd[s.k]);
+  return topbar(L.title) + `
+  <p class="muted" style="margin-top:0">${esc(L.topic||"")} · 표현 ${L.items.length}개</p>
+  ${next?`<button class="btn block" data-act="step" data-k="${next.k}">▶ 이어서: ${esc(next.t)}</button>`:`<div class="panel"><b>오늘 코스를 모두 마쳤어요.</b> <span class="muted small">내일 복습이 자동으로 잡혀 있어요.</span></div>`}
+  <div class="section-h"><h2>오늘의 코스</h2><span class="small muted">순서대로 하면 기억이 단단해져요</span></div>
+  <div class="course">${STEPS.map((s,i)=>`<button class="step ${sd[s.k]?"done":""}" data-act="step" data-k="${s.k}"><span class="n">${sd[s.k]?"✓":i+1}</span><span><b>${esc(s.t)}</b><small>${esc(s.d)}${s.k==="chat"&&!AI.ok()?" · Claude 연결 필요":""}</small></span><span class="muted">›</span></button>`).join("")}</div>
+  <div class="section-h"><h2>더 연습하기</h2></div>
+  <div class="modes">
+    <button class="mode" data-act="hands"><b>🎧 핸즈프리 듣기</b><small>화면 안 보고 귀로 반복 (출퇴근·잠들기 전)</small></button>
+    <button class="mode" data-act="drillmode" data-type="listen"><b>👂 듣고 뜻 고르기</b><small>소리만 듣고 의미 떠올리기</small></button>
+    <button class="mode" data-act="drillmode" data-type="reverse"><b>🔄 한→영 고르기</b><small>디테일이 다른 보기 중 정답</small></button>
+    <button class="mode" data-act="story-blank"><b>▢ 빈칸 스토리</b><small>이야기 속 표현을 떠올리고 열기</small></button>
+  </div>
+  <div class="section-h"><h2>표현 ${L.items.length}개</h2></div>
+  <div class="item-list">${L.items.map(it=>{ const lv=itemLevel(L.id,it.id); return `<button class="item-row" data-act="item" data-lid="${esc(L.id)}" data-id="${esc(it.id)}"><span><span class="en">${esc(it.emoji||"")} ${esc(it.en)}</span><br><span class="small muted">${esc(it.ko)}</span></span><span class="lvl ${lv.cls}">${esc(lv.txt)}</span></button>`; }).join("")}</div>
+  <div class="row" style="margin-top:20px"><button class="chip" data-act="del-lesson" data-lid="${esc(L.id)}">이 학습 삭제</button></div>`;
+}
+
+/* ---------- card ---------- */
+function cardHTML(L, it){
+  const say1 = `<button class="spk" data-act="say" data-text="${esc(it.en)}" aria-label="듣기">🔊</button>`;
+  return `<article class="card">
+    <div class="card-head"><div class="card-emoji" aria-hidden="true">${esc(it.emoji||"📌")}</div><div style="flex:1;min-width:0">
+      <div class="band"><span class="en">${esc(it.en)}</span><span class="ko">${esc(it.ko)}</span></div>
+      ${it.syn?`<div class="syn">= ${esc(it.syn)}</div>`:""}${it.ant?`<div class="syn" style="color:var(--muted)">반대: ${esc(it.ant)}</div>`:""}
+    </div></div>
+    <div class="sec"><div class="row" style="justify-content:space-between"><h3>🔬 디테일 해부 <span class="small muted">(글자를 누르면 원리)</span></h3><span class="row">${say1}<button class="spk" data-act="say" data-text="${esc(it.en)}" data-rate="0.75" aria-label="천천히">🐢</button></span></div>
+      ${tokensHTML(it)}
+      <div class="legend"><span><i style="background:var(--c-art)"></i>관사</span><span><i style="background:var(--c-prep)"></i>전치사</span><span><i style="background:var(--c-pl)"></i>복수 s</span><span><i style="background:var(--c-poss)"></i>소유격</span><span><i style="background:var(--c-un)"></i>셀 수 없음</span></div>
+      <div id="tok-tip" class="note" hidden></div>
+    </div>
+    ${(it.details||[]).length?`<div class="sec"><h3>💡 놓치기 쉬운 디테일과 원리</h3>${it.details.map(d=>`<div class="detail"><b>${esc(d.k)}</b><span>${esc(d.d)}</span></div>`).join("")}</div>`:""}
+    ${it.note?`<div class="note">📌 ${esc(it.note)}</div>`:""}
+    ${it.ex&&it.ex.en?`<div class="sec"><h3>📖 교재 예문</h3><div class="say-line"><div><div class="ex">${highlight(it.ex.en,it)}</div><div class="small muted">${esc(it.ex.ko)}</div></div><button class="spk" data-act="say" data-text="${esc(it.ex.en)}" aria-label="예문 듣기">🔊</button></div></div>`:""}
+    ${it.mnem?`<div class="sec"><h3>🧠 그림 연상</h3><div class="mnem">${esc(it.mnem)}</div></div>`:""}
+    ${(it.talk||[]).length?`<div class="sec"><h3>🗣️ 회화에서 바로 쓰기</h3>${it.talk.map(t=>`<div class="say-line"><div><div class="ex">${highlight(t.en,it)}</div><div class="small muted">${esc(t.ko)}</div></div><button class="spk" data-act="say" data-text="${esc(t.en)}" aria-label="듣기">🔊</button></div>`).join("")}</div>`:""}
+    ${it.qa&&it.qa.q?`<div class="sec"><h3>🎤 IELTS Speaking 이라면</h3><div class="say-line"><div><div class="small muted">Q. ${esc(it.qa.q)}</div><div class="ex">A. ${highlight(it.qa.a,it)}</div></div><button class="spk" data-act="say" data-text="${esc(it.qa.q+" ... "+it.qa.a)}" aria-label="듣기">🔊</button></div></div>`:""}
+    <div class="sec"><h3>🔁 따라 말하기 (섀도잉)</h3>${speakBox("shadow", it)}</div>
+  </article>`;
+}
+function speakBox(ctx, it){
+  if(!Mic.ok()) return `<p class="small muted" style="margin:0">이 화면에선 음성 인식을 쓸 수 없어요. 🔊를 듣고 소리 내어 세 번 따라 해 보세요. 입으로 말한 표현이 더 오래 남아요.</p>`;
+  return `<div class="row"><button class="mic" data-mic data-act="mic" data-ctx="${ctx}" data-lid="${esc(S.lid||"")}" data-id="${esc(it.id)}">🎙️ 말하기</button><span id="mic-live" class="live"></span></div><div id="mic-result"></div>`;
+}
+function verdictHTML(it, text, j){
+  if(j.empty) return `<div class="verdict no"><b>소리가 들리지 않았어요</b><p>마이크 버튼을 누르고 또박또박 말해 보세요.</p></div>`;
+  if(j.ok) return `<div class="verdict ok"><b>정확해요! ✓</b><p>들린 문장: “${esc(text)}”</p></div>`;
+  return `<div class="verdict no"><b>디테일을 확인해요</b><p>들린 문장: “${esc(text)}”</p>${j.issues.map(x=>`<p>• ${esc(x)}</p>`).join("")}<p>정답: <b class="en">${esc(it.en)}</b> <button class="spk" data-act="say" data-text="${esc(it.en)}">🔊</button></p></div>`;
+}
+function viewCards(){
+  const L = lessonById(S.lid); const it = L.items[S.idx];
+  const last = S.idx===L.items.length-1;
+  return topbar(`카드 ${S.idx+1} / ${L.items.length}`, "lesson") + cardHTML(L, it) + `
+  <div class="pager"><button class="btn ghost" data-act="card-prev" ${S.idx?"":"disabled"}>← 이전</button>
+  <div class="dots">${L.items.map((_,i)=>`<i class="${i===S.idx?"on":""}"></i>`).join("")}</div>
+  <button class="btn" data-act="card-next">${last?"카드 완료 ✓":"다음 →"}</button></div>`;
+}
+function sheetHTML(){ const L=lessonById(S.sheet.lid); const it=L&&L.items.find(i=>i.id===S.sheet.iid); if(!it) return ""; const keep=S.lid; S.lid=L.id; const h=cardHTML(L,it); S.lid=keep; return `<div class="sheet-wrap" data-act="close-sheet"><div class="sheet" data-stop><div class="grab"><button class="icon-btn" data-act="close-sheet" aria-label="닫기">✕</button></div>${h}</div></div>`; }
+
+/* ---------- story ---------- */
+function viewStory(){
+  const L = lessonById(S.lid); const st = L.story;
+  if(!st || !(st.scenes||[]).length) return topbar("스토리","lesson")+`<div class="panel">이 학습에는 스토리가 없어요.</div>`;
+  return topbar(st.title||"스토리", "lesson") + `
+  <div class="panel stack" style="margin-bottom:14px"><div><b>기억의 궁전 경로</b><div class="small muted">장소를 순서대로 걸으며 각 방에 표현을 놓아 두세요. 나중엔 경로만 떠올려도 표현이 줄줄이 따라 나와요.</div></div>
+    <div class="route">${st.scenes.map((s,i)=>`${i?'<span>→</span>':""}<a href="#scene-${i}" data-act="jump" data-i="${i}">${esc(s.title||("장소 "+(i+1)))}</a>`).join("")}</div>
+    <div class="row"><button class="chip ${S.blank?"":"on"}" data-act="blank" data-v="0">표현 보이기</button><button class="chip ${S.blank?"on":""}" data-act="blank" data-v="1">▢ 빈칸 회상 모드</button><button class="chip" data-act="story-all">🔊 영어로 전체 듣기</button></div>
+  </div>
+  <div class="stack">${st.scenes.map((sc,i)=>`<section class="scene-card" id="scene-${i}">${sceneSVG(sc,L)}<div class="scene-body"><h3>${esc(sc.title||"")}</h3><div class="narr">${storyText(sc.ko,L,S.blank)}</div>
+    <div class="row"><button class="spk wide" data-act="say" data-text="${esc(sc.en||"")}">🔊 영어로 듣기</button><button class="spk wide" data-act="say" data-lang="ko" data-text="${esc(String(sc.ko||"").replace(/\[\[[^|\]]+\|([^\]]+)\]\]/g,"$1"))}">🔊 한국어로 듣기</button></div>
+    <details><summary class="small muted">영어 스토리 보기</summary><p class="en-story">${esc(sc.en||"")}</p></details></div></section>`).join("")}</div>
+  <button class="btn block" style="margin-top:16px" data-act="story-done">스토리 완료 ✓</button>`;
+}
+
+/* ---------- drills ---------- */
+function allItems(){ const out=[]; for(const L of lessons()) for(const it of L.items) out.push({lid:L.id, it}); return out; }
+function makeTask(type, lid, iid){ return {type, lid, iid}; }
+function prepTask(t){
+  if(t.ready) return; t.ready=true; const it = itemOf(t.lid, t.iid);
+  const q = it.quiz && (it.quiz.opts||[]).length>=2 ? it.quiz : null;
+  if((t.type==="detail"||t.type==="reverse"||t.type==="build") && !q) t.type="listen";
+  if(t.type==="detail"){ t.opts = shuffle(q.opts.slice(0,4).map(o=>({t:o.t, ok:!!o.ok, why:o.why||""}))); }
+  if(t.type==="reverse"){ t.opts = shuffle(q.opts.slice(0,4).map(o=>({t:o.t, ok:!!o.ok, why:o.why||""}))); }
+  if(t.type==="listen"){ const others = shuffle(allItems().filter(x=>x.it.ko!==it.ko)).slice(0,3).map(x=>({t:x.it.ko, ok:false, why:`이건 '${x.it.en}'의 뜻이에요.`})); t.opts = shuffle([{t:it.ko, ok:true, why:""}, ...others]); }
+  if(t.type==="build"){
+    const right = q.opts.find(o=>o.ok) || q.opts[0];
+    const talk = (it.talk||[]).find(x => phraseRe(it).test(norm(x.en)) && x.en.split(" ").length<=12);
+    const sentence = talk ? talk.en : q.s.replace(/_{2,}/, right.t);
+    t.sentence = sentence; t.ko = talk ? talk.ko : it.ko;
+    const words = sentence.replace(/\s+([,.!?])/g,"$1").split(/\s+/).map(w=>w.replace(/[.,!?;:"]+$/,"").replace(/^"/,"")).filter(Boolean);
+    t.answer = words.map(w=>w.toLowerCase());
+    const correctSet = new Set(norm(right.t).split(" "));
+    const distract = [...new Set(q.opts.filter(o=>!o.ok).flatMap(o=>norm(o.t).split(" ")).filter(w=>w && !correctSet.has(w)))].slice(0,3);
+    t.tiles = shuffle([...words, ...distract].map((w,i)=>({w, i})));
+    t.placed = [];
+  }
+  if(t.type==="speak"){ const talk=(it.talk||[])[0]; t.ko = talk ? talk.ko : it.ko; t.model = talk ? talk.en : it.en; }
+}
+function startDrill(title, tasks, back, step){
+  if(!tasks.length){ toast("연습할 표현이 없어요."); return; }
+  go("drill", {drill:{title, tasks, i:0, back, step, results:[], answered:false, requeued:new Set()}});
+}
+function lessonDrill(type){
+  const L = lessonById(S.lid); const ids = shuffle(L.items.map(i=>i.id));
+  const names = {detail:"디테일 함정 퀴즈", build:"문장 조립", speak:"소리 내어 말하기", listen:"듣고 뜻 고르기", reverse:"한→영 고르기"};
+  startDrill(names[type], ids.map(id=>makeTask(type, L.id, id)), "lesson", ({detail:"quiz", build:"build", speak:"speak"})[type]);
+}
+function reviewDrill(kind){
+  let pairs=[];
+  if(kind==="due") pairs = dueList().slice(0,25);
+  else if(kind==="mix") pairs = shuffle(allItems().filter(x=>srs(x.lid)[x.it.id])).slice(0,15).map(x=>({lid:x.lid, iid:x.it.id}));
+  else { const n = {d1:1, d2:2, d7:7}[kind]; for(const L of studiedOn(addDays(today(),-n))) for(const it of L.items) pairs.push({lid:L.id, iid:it.id}); }
+  const types = ["reverse","detail","listen","build","speak"];
+  const tasks = shuffle(pairs).map((p,i) => { const st = srs(p.lid)[p.iid]; const k = ((st&&st.reps)||0) + i; return makeTask(types[k % types.length], p.lid, p.iid); });
+  const names = {due:"오늘의 복습", mix:"섞어서 복습", d1:"어제 배운 것", d2:"그저께 배운 것", d7:"일주일 전 배운 것"};
+  S.lid = null; startDrill(names[kind], tasks, "home", null);
+}
+function viewDrill(){
+  const D = S.drill; const t = D.tasks[D.i];
+  if(!t) return drillSummary();
+  prepTask(t); const it = itemOf(t.lid, t.iid);
+  const pct = Math.round(D.i / D.tasks.length * 100);
+  let body = "";
+  const fb = D.answered ? feedbackHTML(t, it) : "";
+  if(t.type==="detail"){
+    const s = esc(it.quiz.s).replace(/_{2,}/, '<span class="blank"></span>');
+    body = `<div class="eyebrow">디테일 함정 · 빈칸에 딱 맞는 것</div><p class="q">${s}</p>
+      <div class="opts">${t.opts.map((o,k)=>optBtn(t,o,k,false)).join("")}</div>`;
+  } else if(t.type==="reverse"){
+    body = `<div class="eyebrow">한 → 영 · 디테일까지 정확한 것</div><p class="prompt-ko">${esc(it.emoji||"")} ${esc(it.ko)}</p><div class="opts">${t.opts.map((o,k)=>optBtn(t,o,k,false)).join("")}</div>`;
+  } else if(t.type==="listen"){
+    body = `<div class="eyebrow">듣고 뜻 고르기</div><div class="row"><button class="btn soft" data-act="say" data-text="${esc(it.en)}">🔊 다시 듣기</button><button class="btn ghost" data-act="say" data-text="${esc(it.en)}" data-rate="0.75">🐢 천천히</button></div>
+      ${D.answered?`<p class="q">${esc(it.en)}</p>`:""}<div class="opts" style="margin-top:12px">${t.opts.map((o,k)=>optBtn(t,o,k,true)).join("")}</div>`;
+  } else if(t.type==="build"){
+    const placed = t.placed.map(i => t.tiles.find(x=>x.i===i));
+    body = `<div class="eyebrow">문장 조립 · 함정 타일이 섞여 있어요</div><p class="prompt-ko">${esc(t.ko)}</p>
+      <div class="slots">${placed.length?placed.map(x=>`<button class="tile" data-act="unplace" data-i="${x.i}" ${D.answered?"disabled":""}>${esc(x.w)}</button>`).join(""):'<span class="small muted">아래 타일을 순서대로 누르세요</span>'}</div>
+      <div class="tiles" style="margin-top:12px">${t.tiles.map(x=>`<button class="tile ${t.placed.includes(x.i)?"used":""}" data-act="place" data-i="${x.i}" ${D.answered?"disabled":""}>${esc(x.w)}</button>`).join("")}</div>
+      ${D.answered?"":`<div class="row" style="margin-top:12px"><button class="btn" data-act="build-check" ${t.placed.length?"":"disabled"}>확인</button><button class="btn ghost" data-act="build-clear">다시</button></div>`}`;
+  } else if(t.type==="speak"){
+    body = `<div class="eyebrow">한국어를 보고 영어로 말하기</div><p class="prompt-ko">${esc(it.emoji||"")} ${esc(t.ko)}</p><p class="small muted">핵심 표현: ${esc(it.ko)} → 첫 글자 힌트 <b class="en">${esc(it.en.split(" ").map(w=>w[0]+"_".repeat(Math.max(0,w.length-1))).join(" "))}</b></p>
+      ${D.answered?"":(Mic.ok()?`<div class="row"><button class="mic" data-mic data-act="mic" data-ctx="drill">🎙️ 말하기</button><span id="mic-live" class="live"></span></div><button class="chip" style="margin-top:10px" data-act="self-reveal">음성 없이 스스로 확인</button>`:`<button class="btn" data-act="self-reveal">소리 내어 말한 뒤 정답 확인</button>`)}`;
+  }
+  return topbar(D.title, D.back) + `<div class="progress"><i style="width:${pct}%"></i></div><div class="stack">${body}${fb}</div>`;
+}
+function optBtn(t, o, k, kor){
+  const D=S.drill; let cls = kor?"opt kor":"opt"; let why="";
+  if(D.answered){ if(o.ok) cls+=" right"; else if(t.picked===k) cls+=" wrong"; if(o.why && (o.ok || t.picked===k || t.type!=="listen")) why = `<span class="why">${o.ok?"✓ ":"✗ "}${esc(o.why)}</span>`; }
+  return `<button class="${cls}" data-act="pick" data-k="${k}" ${D.answered?"disabled":""}>${esc(o.t)}${why}</button>`;
+}
+function feedbackHTML(t, it){
+  const D=S.drill; let head="";
+  if(t.type==="speak"){
+    if(t.self) head = `<div class="verdict ok" style="background:var(--surface2);color:var(--ink)"><b>정답</b><p class="en" style="font-size:18px">${highlight(t.model,it)}</p><div class="row"><button class="spk wide" data-act="say" data-text="${esc(t.model)}">🔊 듣기</button></div><p class="small muted">방금 말한 것과 비교해서 스스로 평가해 주세요.</p><div class="row"><button class="btn soft" data-act="self-grade" data-q="5">완벽</button><button class="btn ghost" data-act="self-grade" data-q="3">조금 헷갈림</button><button class="btn ghost" data-act="self-grade" data-q="1">못 함</button></div></div>`;
+    else head = verdictHTML(it, t.heard, t.judge) + `<div class="panel"><div class="small muted">모범 문장</div><div class="say-line"><div class="ex">${highlight(t.model,it)}</div><button class="spk" data-act="say" data-text="${esc(t.model)}">🔊</button></div></div>`;
+  } else if(t.type==="build"){
+    head = t.correct ? `<div class="verdict ok"><b>정확해요! ✓</b><p class="en">${highlight(t.sentence,it)}</p></div>` : `<div class="verdict no"><b>아쉬워요</b><p>정답: <span class="en">${highlight(t.sentence,it)}</span></p></div>`;
+  } else {
+    head = t.correct ? `<div class="verdict ok"><b>정답! ✓</b></div>` : `<div class="verdict no"><b>다시 볼게요.</b><p>이 표현은 복습 끝에 한 번 더 나와요.</p></div>`;
+  }
+  const d = (it.details||[]).slice(0,2).map(x=>`<div class="detail"><b>${esc(x.k)}</b><span>${esc(x.d)}</span></div>`).join("");
+  const waitSelf = t.type==="speak" && t.self && !t.graded;
+  return `${head}${d?`<div class="sec"><h3>원리 다시 보기 · <span class="en">${esc(it.en)}</span></h3>${d}</div>`:""}
+    <div class="row"><button class="spk wide" data-act="item" data-lid="${esc(t.lid)}" data-id="${esc(t.iid)}">📇 카드 전체 보기</button>${waitSelf?"":`<button class="btn" style="margin-left:auto" data-act="next">다음 →</button>`}</div>`;
+}
+function answer(correct, q){
+  const D=S.drill; const t=D.tasks[D.i]; t.correct=correct; D.answered=true;
+  if(!t.graded){ t.graded=true; grade(t.lid, t.iid, q ?? (correct?4:1)); D.results.push({lid:t.lid, iid:t.iid, ok:correct}); }
+  if(!correct && !D.requeued.has(t.lid+"/"+t.iid)){ D.requeued.add(t.lid+"/"+t.iid); D.tasks.push({type:t.type==="speak"?"reverse":t.type, lid:t.lid, iid:t.iid, retry:true, graded:true}); }
+  const it = itemOf(t.lid,t.iid);
+  if(correct && t.type!=="listen") say(t.type==="build"?t.sentence: t.type==="speak"? t.model : it.en);
+  if(t.type==="listen") say(it.en);
+  render();
+}
+function drillSummary(){
+  const D=S.drill; const first = D.results; const ok = first.filter(r=>r.ok).length;
+  const missed = first.filter(r=>!r.ok);
+  if(D.step && S.lid && !D.marked){ D.marked=true; markStep(S.lid, D.step); }
+  return topbar(D.title, D.back) + `<div class="done-hero"><div class="em">${ok===first.length?"🏆":"💪"}</div><h2>${ok} / ${first.length} 첫 시도에 정답</h2><p class="muted">틀린 표현은 오늘 안에 한 번 더 나왔고, 내일 복습 목록에 들어가요.</p></div>
+  ${missed.length?`<div class="section-h"><h2>다시 볼 표현</h2></div><div class="item-list">${missed.map(r=>{const it=itemOf(r.lid,r.iid); return `<button class="item-row" data-act="item" data-lid="${esc(r.lid)}" data-id="${esc(r.iid)}"><span><span class="en">${esc(it.en)}</span><br><span class="small muted">${esc(it.ko)}</span></span><span class="lvl due">내일 복습</span></button>`;}).join("")}</div>`:""}
+  <div class="stack" style="margin-top:16px">${D.back==="lesson"?`<button class="btn block" data-act="after-step">다음 단계로 →</button>`:`<button class="btn block" data-act="go" data-to="home">홈으로</button>`}</div>`;
+}
+
+/* ---------- done ---------- */
+function viewDone(){
+  const L = lessonById(S.lid); const y1 = studiedOn(addDays(today(),-1)).filter(x=>x.id!==L.id); const due = dueList();
+  const sch = [1,3,7,16,35].map(n=>addDays(today(),n).slice(5).replace("-","/"));
+  return topbar("오늘 학습 완료", "lesson") + `<div class="done-hero"><div class="em">🎉</div><h2>${esc(L.title)} 코스를 마쳤어요</h2><p class="muted">기억은 잊어버리기 직전에 다시 꺼낼 때 가장 오래 남아요. 이 일정으로 다시 불러 드릴게요.</p><div class="schedule">${sch.map(s=>`<span>${s}</span>`).join("")}</div></div>
+  <div class="stack"><b>이제 이전에 공부한 걸 꺼내 볼까요?</b>
+    <button class="btn block" data-act="review" data-kind="due" ${due.length?"":"disabled"}>🔁 밀린 복습 ${due.length}개</button>
+    <button class="btn soft block" data-act="review" data-kind="d1" ${y1.length?"":"disabled"}>어제 배운 것 복습${y1.length?"":" (없음)"}</button>
+    <button class="btn soft block" data-act="review" data-kind="d2" ${studiedOn(addDays(today(),-2)).length?"":"disabled"}>그저께 배운 것 복습</button>
+    <button class="btn ghost block" data-act="hands">🎧 자기 전에 핸즈프리로 한 번 더</button></div>`;
+}
+
+/* ---------- AI chat ---------- */
+function chatRules(L){
+  return `You are a friendly English conversation partner for a Korean learner (IELTS level, intermediate). Role-play a natural everyday situation related to "${L.title} ${L.topic||""}".
+TARGET EXPRESSIONS (id: phrase = Korean):
+${L.items.map(i=>`${i.id}: ${i.en} = ${i.ko}`).join("\n")}
+Each turn: reply in 1-2 short natural sentences, then ask ONE question that invites the learner to use a target expression they have not used yet.
+Check the learner's LAST message strictly for the small details: articles (a/an/the/none), prepositions, plural -s, countable/uncountable, -ly adverbs, the right verb (e.g. place an order, not make an order), one's → my/your.
+Reply ONLY with JSON:
+{"reply":"your English line","reply_ko":"Korean translation","feedback":"Korean, 1-2 sentences about the learner's last message: praise correct target use or explain the detail mistake and WHY; empty string at the start","fixed":"corrected learner sentence, or empty if it was correct","used":["ids of target expressions the learner used correctly in the last message"],"suggestions":[{"en":"a possible learner reply using an unused target expression","ko":"Korean","bad":false,"why":""},{"en":"...","ko":"...","bad":false,"why":""},{"en":"a reply with exactly ONE subtle detail error in a target expression","ko":"...","bad":true,"why":"Korean: what is wrong and the rule"}]}
+Put the suggestions in random order.`;
+}
+async function chatCall(){
+  const C=S.chat; const L=lessonById(S.lid); C.busy=true; C.err=""; render();
+  const turns=[{role:"user", content:chatRules(L)}, ...C.turns.slice(-14)];
+  if(turns.length===1) turns.push({role:"user", content:"Start the conversation now with a friendly opening line and a question."});
+  C.ctl = new AbortController();
+  try{
+    const r = await AI.json(turns, {tier:"quick", cache:false, signal:C.ctl.signal});
+    const reply = String(r.reply||"").trim(); if(!reply) throw {code:"invalid_json"};
+    const last = C.msgs[C.msgs.length-1];
+    if(last && last.who==="me"){ last.fb = String(r.feedback||""); last.fixed = String(r.fixed||""); }
+    (Array.isArray(r.used)?r.used:[]).forEach(id => { if(L.items.some(i=>i.id===id)){ C.used.add(String(id)); grade(L.id, String(id), 5); } });
+    C.msgs.push({who:"ai", en:reply, ko:String(r.reply_ko||"")});
+    C.turns.push({role:"assistant", content:reply});
+    C.sugg = (Array.isArray(r.suggestions)?r.suggestions:[]).slice(0,3).map(s=>({en:String(s.en||""), ko:String(s.ko||""), bad:!!s.bad, why:String(s.why||"")})).filter(s=>s.en);
+    C.busy=false; render(); say(reply);
+    if(C.used.size >= Math.min(5, L.items.length)) markStep(L.id, "chat");
+  }catch(e){ C.busy=false; C.err = aiErr(e); render(); }
+}
+function chatSend(text){
+  const C=S.chat; if(!text || C.busy) return;
+  C.msgs.push({who:"me", en:text}); C.turns.push({role:"user", content:"Learner: "+text}); C.sugg=[]; chatCall();
+}
+function viewChat(){
+  const L=lessonById(S.lid); const C=S.chat;
+  if(!AI.ok()) return topbar("AI 회화","lesson") + aiMissing();
+  return topbar("AI 실전 회화", "lesson") + `
+  <div class="panel stack" style="margin-bottom:12px"><div class="small muted">대화에서 표현을 맞게 쓰면 초록색으로 바뀌어요 (5개 이상이면 단계 완료). 말하기가 어려우면 아래 추천 답변을 눌러도 돼요. 단, 하나에는 함정이 숨어 있어요.</div>
+  <div class="chips">${L.items.map(i=>`<span class="target ${C.used.has(i.id)?"used":""}">${esc(i.en)}</span>`).join("")}</div></div>
+  <div class="msgs">${C.msgs.map(m=> m.who==="ai" ? `<div class="msg ai"><div class="say-line"><span class="t">${esc(m.en)}</span><button class="spk" data-act="say" data-text="${esc(m.en)}">🔊</button></div><span class="k">${esc(m.ko)}</span></div>` : `<div class="msg me"><span class="t">${esc(m.en)}</span>${m.fb?`<div class="fb">${esc(m.fb)}${m.fixed?`<br>👉 <span class="en">${esc(m.fixed)}</span> <button class="spk" data-act="say" data-text="${esc(m.fixed)}">🔊</button>`:""}</div>`:""}</div>`).join("")}
+  ${C.busy?`<div class="msg ai"><span class="k">생각하는 중…</span></div>`:""}</div>
+  ${C.err?`<div class="verdict no" style="margin-top:10px"><p>${esc(C.err)}</p><button class="btn ghost" data-act="chat-retry">다시 시도</button></div>`:""}
+  ${!C.busy && C.msgs.length ? `<div class="stack" style="margin-top:14px">
+    ${Mic.ok()?`<div class="row"><button class="mic" data-mic data-act="mic" data-ctx="chat">🎙️ 말하기</button><span id="mic-live" class="live"></span></div>`:""}
+    ${C.sugg.length?`<div class="sugg"><div class="small muted">추천 답변 (눌러서 보내기)</div>${C.sugg.map((s,k)=>`<button class="${s.revealed?"bad":""}" data-act="sugg" data-k="${k}"><span class="en">${esc(s.en)}</span><small>${esc(s.ko)}</small>${s.revealed?`<small style="color:var(--bad);display:block">✗ ${esc(s.why)}</small>`:""}</button>`).join("")}</div>`:""}
+  </div>`:""}`;
+}
+function aiMissing(){
+  if(AI.standalone()) return `<div class="panel stack"><b>Claude 연결이 필요해요</b><p class="muted small" style="margin:0">이 파일을 Claude 밖에서 열었어요. 설정에서 Anthropic API 키를 한 번만 넣으면 사진 분석과 AI 회화를 쓸 수 있어요. (카드·스토리·퀴즈·복습은 키 없이도 돼요)</p><button class="btn" data-act="go" data-to="settings">설정 열기</button></div>`;
+  return `<div class="panel stack"><b>Claude에 연결하지 못했어요</b><p class="muted small" style="margin:0">이 화면에서 Claude 사용이 허용되지 않았거나 아직 연결 중이에요. 잠시 뒤 다시 열어 보거나, 화면 위 권한 메뉴에서 허용해 주세요. 카드·스토리·퀴즈·복습은 그대로 쓸 수 있어요.</p></div>`;
+}
+
+/* ---------- hands-free ---------- */
+function viewHands(){
+  const H=S.hf; const L=lessonById(H.lid); const it=L.items[H.i];
+  return topbar("🎧 핸즈프리 듣기", "lesson") + `<div class="hf"><div class="card-emoji">${esc(it.emoji||"📌")}</div><div class="en">${esc(it.en)}</div><div class="muted">${esc(it.ko)}</div><div class="phase" id="hf-phase">${esc(H.phase||"재생을 누르면 시작해요")}</div>
+  <div class="small muted">${H.i+1} / ${L.items.length} · ${H.round}회차</div>
+  <div class="hf-ctrl"><button class="icon-btn" data-act="hf-prev" aria-label="이전">⏮</button><button class="big-round" data-act="hf-toggle" aria-label="재생">${H.playing?"⏸":"▶"}</button><button class="icon-btn" data-act="hf-next" aria-label="다음">⏭</button></div>
+  <div class="chips" style="justify-content:center"><button class="chip ${H.shuffle?"on":""}" data-act="hf-shuffle">섞어서</button><button class="chip ${H.ko?"on":""}" data-act="hf-ko">한국어 뜻 읽기</button><button class="chip ${H.ex?"on":""}" data-act="hf-ex">예문까지</button></div>
+  <p class="small muted" style="max-width:420px">영어 → (멈춤: 따라 말하기) → 뜻 → 영어 → 회화 문장 순서로 계속 반복해요. 화면을 끄지 않게 유지해 주세요.</p></div>`;
+}
+async function hfLoop(){
+  const H=S.hf; if(H.running) return; H.running=true; H.stop=false;
+  try{ H.lock = await navigator.wakeLock?.request("screen"); }catch(e){}
+  const phase = p => { H.phase=p; const el=$("#hf-phase"); if(el) el.textContent=p; };
+  const L = lessonById(H.lid);
+  while(H.playing && !H.stop && S.view==="hands"){
+    const it = L.items[H.i]; const myI = H.i;
+    const steps = [["🇺🇸 영어", ()=>Voice.speak(it.en,"en",Settings.rate*0.9)], ["🗣️ 따라 말해 보세요", ()=>sleep(Settings.pause*1000)]];
+    if(H.ko) steps.push(["🇰🇷 뜻", ()=>Voice.speak(it.ko,"ko")]);
+    steps.push(["🇺🇸 한 번 더", ()=>Voice.speak(it.en,"en")], ["🗣️ 따라 말해 보세요", ()=>sleep(Settings.pause*1000)]);
+    if(H.ex){ const t=(it.talk||[])[0]; if(t){ steps.push(["💬 회화 문장", ()=>Voice.speak(t.en,"en")], ["🗣️ 따라 말해 보세요", ()=>sleep(Settings.pause*1300)]); } }
+    for(const [p,fn] of steps){ if(!H.playing||H.stop||H.i!==myI) break; phase(p); try{ await fn(); }catch(e){ if(e&&e.code==="viewer_stopped") H.playing=false; break; } await sleep(350); }
+    if(!H.playing||H.stop) break;
+    if(H.i===myI){ if(H.shuffle){ let n=H.i; while(L.items.length>1 && n===H.i) n=Math.random()*L.items.length|0; H.i=n; } else { H.i=H.i+1; if(H.i>=L.items.length){ H.i=0; H.round++; } } }
+    render();
+  }
+  H.running=false; try{ H.lock?.release(); }catch(e){}
+}
+
+/* ---------- add lesson from photos ---------- */
+function viewAdd(){
+  const A=S.add;
+  if(!AI.ok()) return topbar("새 학습 만들기") + aiMissing();
+  let body="";
+  if(A.stage==="pick"){
+    body = `<div class="stack"><p class="muted" style="margin:0">교재 페이지를 정면에서, 글자가 잘 보이게 찍어 주세요. 한 번에 여러 장도 돼요. 펼친 두 페이지를 한 장에 찍어도 괜찮아요.</p>
+      ${A.files.length?`<div class="thumbs">${A.urls.map((u,i)=>`<div style="position:relative"><img src="${u}" alt="사진 ${i+1}"><button class="icon-btn" style="position:absolute;top:6px;right:6px;width:30px;height:30px" data-act="rm-photo" data-i="${i}" aria-label="빼기">✕</button></div>`).join("")}</div>`:""}
+      <button class="upload" data-act="pick-photo" style="margin:0"><span class="big">📷</span><span><b>${A.files.length?"사진 더 추가":"사진 찍기 / 고르기"}</b><span class="small muted">카메라 또는 앨범</span></span></button>
+      <button class="btn block" data-act="extract" ${A.files.length?"":"disabled"}>✨ 표현 읽어 오기</button></div>`;
+  } else if(A.stage==="extracting"){
+    body = `<div class="panel stack"><b>사진에서 표현을 읽는 중…</b><div class="prog-list">${A.log.map(l=>`<div>${l}</div>`).join("")}</div><p class="small muted" style="margin:0">사진 한 장에 30초~1분쯤 걸려요.</p><button class="btn ghost" data-act="abort">중단</button></div>`;
+  } else if(A.stage==="review"){
+    body = `<div class="stack"><div class="panel"><div class="eyebrow">읽어 온 학습</div><h2 style="font-size:20px">${esc(A.title)}</h2><div class="small muted">${esc(A.topic||"")} · 잘못 읽은 표현은 눌러서 빼세요</div></div>
+      <div class="stack" style="gap:6px">${A.items.map((it,i)=>`<button class="check-item ${it.off?"off":""}" data-act="toggle-item" data-i="${i}"><span class="box">${it.off?"":"✓"}</span><span><span class="en">${esc(it.en)}</span> <span class="small muted">${esc(it.ko)}</span><br><span class="small muted">${esc(it.ex&&it.ex.en||"")}</span></span></button>`).join("")}</div>
+      <button class="btn block" data-act="enrich" ${A.items.some(i=>!i.off)?"":"disabled"}>🧠 학습 자료 만들기 (원리·퀴즈·스토리·그림)</button><button class="btn ghost block" data-act="restart-add">사진 다시 고르기</button></div>`;
+  } else if(A.stage==="enriching"){
+    body = `<div class="panel stack"><b>학습 자료를 만드는 중…</b><div class="prog-list">${A.log.map(l=>`<div>${l}</div>`).join("")}</div><p class="small muted" style="margin:0">디테일 원리, 함정 퀴즈, 회화 문장, 기억궁전 스토리를 만들고 있어요. 1~3분 걸릴 수 있어요.</p><button class="btn ghost" data-act="abort">중단</button></div>`;
+  }
+  if(A.err) body += `<div class="verdict no" style="margin-top:12px"><p>${esc(A.err)}</p></div>`;
+  return topbar("새 학습 만들기") + body;
+}
+async function prepImages(file, perPhoto){
+  const bmp = await createImageBitmap(file);
+  const W=bmp.width, H=bmp.height; const crops=[];
+  if(perPhoto>=3) crops.push([0,1],[0,0.56],[0.44,1]); else if(perPhoto===2) crops.push([0,0.56],[0.44,1]); else crops.push([0,1]);
+  const out=[];
+  for(const [a,b] of crops){
+    const sy=Math.round(H*a), sh=Math.round(H*(b-a)); const sc=Math.min(1, Math.sqrt(1.2e6/(W*sh)));
+    const c=document.createElement("canvas"); c.width=Math.round(W*sc); c.height=Math.round(sh*sc);
+    c.getContext("2d").drawImage(bmp, 0, sy, W, sh, 0, 0, c.width, c.height);
+    out.push(await new Promise(r=>c.toBlob(r,"image/jpeg",0.9)));
+  }
+  return out;
+}
+const EXTRACT_PROMPT = (n) => `You are reading photos of an English vocabulary / collocation textbook for Korean learners (for example "IELTS Vocabulary", a page with headword bands, Korean meanings, example sentences and Korean translations).
+${n>1?`For this ONE photo you get ${n} images: ${n===3?"the full photo, then a zoomed TOP half and a zoomed BOTTOM half (they overlap)":"a zoomed TOP half and a zoomed BOTTOM half (they overlap)"}. Use the zoomed images to read small text and merge duplicates from the overlap.`:""}
+Ignore hands, desks and background objects. A photo may show two facing pages: read the left page first, then the right page.
+Extract EVERY headword entry in reading order. For each entry give:
+- "en": the English headword exactly as printed (keep articles, prepositions, one's, -s)
+- "ko": the Korean meaning as printed
+- "syn": the text after "=" under the headword, else ""
+- "ant": an antonym line (반의 / 반대) with its meaning, else ""
+- "note": any tip line such as 유의 / 활용법 / 참고, in Korean as printed, else ""
+- "ex": {"en": the English example sentence exactly, "ko": its Korean translation exactly}
+If the material is a different kind (word list, dialogue), still extract the key expressions with meanings and examples (write a short natural example if none is printed).
+Also give "title" built from the page headers (e.g. "Day 06 · Money/Shopping") and "topic" (e.g. the section title).
+Do not invent entries that are not on the page. Reply with ONLY JSON: {"title":"","topic":"","items":[{"en":"","ko":"","syn":"","ant":"","note":"","ex":{"en":"","ko":""}}]}`;
+const ENRICH_EXAMPLE = JSON.stringify((({id,emoji,tokens,details,quiz,mnem,talk,qa})=>({id,emoji,tokens,details,quiz,mnem,talk,qa}))(BUILTIN.items.find(i=>i.id==="order")));
+const ENRICH_PROMPT = (items) => `You are an expert English teacher for Korean adults who want to remember expressions for a long time and use them in real conversation (and IELTS Speaking/Writing).
+For EACH expression below, create study data. Write every explanation in natural, friendly Korean (해요체), short and concrete.
+Focus hard on the tiny details Korean learners miss, and explain the PRINCIPLE (why): articles a/an/the/none (모음 소리 → an), prepositions, plural -s, countable vs uncountable, -ly adverb vs adjective, past participle, the verb that collocates (place an order, not make), one's → my/your, irregular past forms.
+Fields per expression:
+- "id": copy the given id
+- "emoji": 1 emoji that pictures it
+- "tokens": the natural usage pattern split into parts, each {"t": word, "r": role}; role is one of verb|adj|adv|noun|art|prep|pl|un|poss|pp|part (pl = plural noun whose -s matters, un = uncountable noun, art = article, poss = possessive such as one's, part = particle of a phrasal verb). Include an article token if the expression is normally used with one (e.g. "an emergency fund").
+- "details": 3-4 items {"k": short Korean label (max 12 chars), "d": 1-2 Korean sentences with a ✔ correct and ✗ wrong example}
+- "quiz": {"s": an English sentence with ___ where the expression goes (prefer the book example, shortened to under 16 words), "opts": [the correct form {"t","ok":true,"why"}, then 3 wrong forms that differ by ONE small detail (article, preposition, -s, -ly, verb), each {"t","why": Korean reason}]}
+- "mnem": a vivid visual mnemonic in Korean, 1-2 sentences, starting with an emoji, that also encodes the tricky detail
+- "talk": 2 everyday spoken sentences (max 12 words each) using the expression, [{"en","ko"}]
+- "qa": {"q": an IELTS Speaking style question, "a": a natural 1-2 sentence answer using the expression}
+Example output item for "place an order":
+${ENRICH_EXAMPLE}
+Expressions:
+${items.map(i=>JSON.stringify({id:i.id, en:i.en, ko:i.ko, syn:i.syn, note:i.note, example:i.ex&&i.ex.en})).join("\n")}
+Reply with ONLY a JSON array of the items, in the same order.`;
+const STORY_EXAMPLE = JSON.stringify(BUILTIN.story.scenes[1]);
+const STORY_PROMPT = (title, items) => `Create a memorable "memory palace" story in Korean for a Korean learner to remember ALL of these English expressions (lesson: ${title}).
+Rules:
+- 4-6 scenes along one route of places (e.g. 현관 → 책상 → 가게 → 식당 → 은행). One main character, funny and vivid images, cause and effect from one scene to the next.
+- Every expression appears in exactly one scene, written in English inside the Korean narration with this marker: [[id|English as used in the sentence]].
+- Inside the story, playfully point out the tricky detail (why "an", why the -s, why "for") with an image (e.g. 비상등이 '앵앵(an an)' 울린다).
+- Each scene: {"place": one of home|desk|store|restaurant|bank|street|office|park|school|generic, "title": "① 장소: 짧은 제목", "items": [ids], "ko": 3-5 Korean sentences with markers, "en": the same scene as a simple natural English story (B1 level) that contains the expressions, "props": 3-5 objects {"e": one emoji, "x": 20-300, "y": 40-130, "s": 28-44, "id": the expression id this object stands for, or ""}}. Spread the props apart (at least 60 apart in x or 50 in y) on a 320×180 picture.
+Example scene:
+${STORY_EXAMPLE}
+Expressions:
+${items.map(i=>`${i.id}: ${i.en} = ${i.ko}`).join("\n")}
+Reply with ONLY JSON: {"title": "Korean story title", "scenes": [...]}`;
+async function runExtract(){
+  const A=S.add; A.stage="extracting"; A.err=""; A.log=[]; A.ctl=new AbortController(); render();
+  const max = AI.maxImages(); const per = max>=3 ? 3 : max>=2 ? 2 : 1;
+  try{
+    const results = [];
+    const jobs = A.files.map((f,i) => async () => {
+      A.log[i] = `⏳ 사진 ${i+1} 읽는 중`; render();
+      const imgs = await prepImages(f, per);
+      const r = await AI.json(EXTRACT_PROMPT(imgs.length), {images: imgs, signal: A.ctl.signal});
+      results[i] = r; A.log[i] = `✅ 사진 ${i+1}: 표현 ${(r.items||[]).length}개`; render();
+    });
+    await runPool(jobs, 2);
+    const seen=new Set(); const items=[];
+    for(const r of results) for(const it of (r&&r.items)||[]){ const en=String(it.en||"").trim(); if(!en) continue; const k=norm(en); if(seen.has(k)) continue; seen.add(k);
+      items.push({id: (norm(en).replace(/[^a-z0-9]+/g,"-").slice(0,24)||"x")+"-"+items.length, en, ko:String(it.ko||""), syn:String(it.syn||""), ant:String(it.ant||""), note:String(it.note||""), ex:{en:String(it.ex&&it.ex.en||""), ko:String(it.ex&&it.ex.ko||"")}}); }
+    if(!items.length) throw {code:"none"};
+    const r0 = results.find(Boolean)||{};
+    Object.assign(A, {stage:"review", items, title:String(r0.title||"새 학습 "+today()), topic:String(r0.topic||"")});
+  }catch(e){ A.stage="pick"; A.err = e&&e.code==="none" ? "사진에서 표현을 찾지 못했어요. 글자가 크게 보이도록 다시 찍어 주세요." : aiErr(e); }
+  render();
+}
+async function runPool(jobs, n){ let k=0; const worker = async()=>{ while(k<jobs.length){ const j=jobs[k++]; await j(); } }; await Promise.all(Array.from({length:Math.min(n,jobs.length)}, worker)); }
+async function runEnrich(){
+  const A=S.add; const items = A.items.filter(i=>!i.off).map(({off,...r})=>r);
+  A.stage="enriching"; A.err=""; A.log=[]; A.ctl=new AbortController(); render();
+  const chunks=[]; for(let i=0;i<items.length;i+=5) chunks.push(items.slice(i,i+5));
+  const enriched = {}; let story=null;
+  try{
+    const jobs = chunks.map((ch,ci) => async () => {
+      A.log[ci] = `⏳ 원리·퀴즈·회화 ${ci+1}/${chunks.length}`; render();
+      const arr = await AI.json(ENRICH_PROMPT(ch), {signal:A.ctl.signal});
+      (Array.isArray(arr)?arr:(arr.items||[])).forEach(x => { if(x && x.id) enriched[x.id]=x; });
+      A.log[ci] = `✅ 원리·퀴즈·회화 ${ci+1}/${chunks.length}`; render();
+    });
+    jobs.push(async () => { const si=chunks.length; A.log[si]="⏳ 기억궁전 스토리와 그림"; render(); story = await AI.json(STORY_PROMPT(A.title, items), {signal:A.ctl.signal}); A.log[si]="✅ 기억궁전 스토리와 그림"; render(); });
+    await runPool(jobs, 3);
+  }catch(e){ A.stage="review"; A.err = aiErr(e); render(); return; }
+  const full = items.map(it => sanitizeItem({...it, ...(enriched[it.id]||{}), id:it.id, en:it.en, ko:it.ko, ex:it.ex, syn:it.syn, ant:it.ant, note:it.note}));
+  const L = {id: uid(), title:A.title, topic:A.topic, createdAt: new Date().toISOString(), items: full, story: sanitizeStory(story, full)};
+  Store.save("L_"+L.id, L); markActive();
+  toast("학습을 만들었어요!"); go("lesson", {lid:L.id});
+}
+const ROLES = new Set(Object.keys(ROLE));
+function sanitizeItem(x){
+  const s = v => String(v ?? "");
+  const tokens = Array.isArray(x.tokens) && x.tokens.length ? x.tokens.map(t=>({t:s(t.t), r: ROLES.has(t.r)?t.r:"noun"})).filter(t=>t.t) : x.en.split(/\s+/).map(w=>({t:w, r:"noun"}));
+  const quiz = x.quiz && Array.isArray(x.quiz.opts) && x.quiz.opts.some(o=>o.ok) && /_{2,}/.test(s(x.quiz.s)) ? {s:s(x.quiz.s), opts:x.quiz.opts.slice(0,4).map(o=>({t:s(o.t), ok:!!o.ok, why:s(o.why)}))} : null;
+  return {id:x.id, en:x.en, ko:x.ko, emoji:s(x.emoji).slice(0,8)||"📌", syn:s(x.syn), ant:s(x.ant), note:s(x.note), ex:{en:s(x.ex&&x.ex.en), ko:s(x.ex&&x.ex.ko)}, tokens,
+    details:(Array.isArray(x.details)?x.details:[]).slice(0,5).map(d=>({k:s(d.k), d:s(d.d)})), quiz, mnem:s(x.mnem),
+    talk:(Array.isArray(x.talk)?x.talk:[]).slice(0,3).map(t=>({en:s(t.en), ko:s(t.ko)})).filter(t=>t.en), qa: x.qa&&x.qa.q ? {q:s(x.qa.q), a:s(x.qa.a)} : null};
+}
+function sanitizeStory(st, items){
+  if(!st || !Array.isArray(st.scenes)) return null;
+  const ids = new Set(items.map(i=>i.id));
+  return {title:String(st.title||"기억궁전 스토리"), scenes: st.scenes.slice(0,8).map(sc=>({place:String(sc.place||"generic"), title:String(sc.title||""), ko:String(sc.ko||""), en:String(sc.en||""), items:(sc.items||[]).map(String).filter(i=>ids.has(i)), props:(sc.props||[]).slice(0,6).map(p=>({e:String(p.e||"").slice(0,8), x:+p.x||160, y:+p.y||90, s:+p.s||34, id: ids.has(String(p.id))?String(p.id):""}))}))};
+}
+
+/* ---------- settings + methods ---------- */
+function viewSettings(){
+  const voices=["buttery","airy","glassy","rounded"];
+  return topbar("설정") + `<div class="stack">
+  <div class="panel stack"><div class="field"><label for="rate"><b>말하기 속도</b> <span class="muted small" id="rate-v">${Settings.rate.toFixed(2)}×</span></label><input id="rate" type="range" min="0.7" max="1.3" step="0.05" value="${Settings.rate}" data-act="rate"></div>
+  <div class="field"><label for="pause"><b>따라 말하기 멈춤 시간</b> <span class="muted small" id="pause-v">${Settings.pause}초</span></label><input id="pause" type="range" min="1" max="6" step="0.5" value="${Settings.pause}" data-act="pause"></div>
+  ${Voice.t?`<div class="field"><b>목소리</b><div class="chips">${voices.map(v=>`<button class="chip ${Settings.voice===v?"on":""}" data-act="voice" data-v="${v}">${v}</button>`).join("")}</div></div>`:""}
+  <button class="btn ghost" data-act="say" data-text="Customers can place an order with just a few clicks.">🔊 미리 듣기</button></div>
+  <div class="panel stack"><b>연결 상태</b><div class="small">🤖 Claude (사진 분석·AI 회화): ${AI.ok()?"연결됨":"연결 안 됨"}<br>🔊 음성: ${Voice.t?"Claude 목소리":"기기 목소리"}<br>🎙️ 음성 인식: ${Mic.d?"Claude 받아쓰기":Mic.ok()?"브라우저 음성 인식":"쓸 수 없음 (스스로 확인 모드)"}<br>💾 저장: ${Store.mode==="db"?"내 Claude 계정 (나만 보기)":"이 브라우저"}</div></div>
+  ${AI.standalone()?`<div class="panel stack"><div class="field"><label for="apikey"><b>Anthropic API 키</b> <span class="small muted">(Claude 밖에서 열었을 때만 필요, 이 기기에만 저장)</span></label><input id="apikey" type="password" autocomplete="off" value="${esc(Settings.apiKey)}" placeholder="sk-ant-..."></div><button class="btn" data-act="save-key">저장</button></div>`:""}
+  <div class="panel stack"><b>되돌리기</b><button class="btn ghost" data-act="restore-builtin">Day 06 기본 학습 다시 보이기</button></div>
+  </div>`;
+}
+function viewMethods(){
+  const M = [
+    ["🔁","간격 반복 (에빙하우스 망각곡선)","잊어버릴 때쯤 다시 꺼내요. 맞히면 1→3→7→16일…로 간격이 늘고, 틀리면 다음 날로 돌아와요 (SM-2 알고리즘). 홈의 '오늘 복습'."],
+    ["🎯","인출 연습 (테스트 효과)","다시 읽기보다 떠올리기가 기억을 훨씬 강하게 해요. 모든 퀴즈·빈칸 스토리·말하기."],
+    ["🖼️","이중 부호화","그림(이모지·장면) + 글 + 소리를 같이 넣으면 기억 통로가 여러 개가 돼요. 카드와 스토리 장면."],
+    ["🏰","기억의 궁전 (장소법) + 스토리법","익숙한 장소를 순서대로 걸으며 표현을 놓아 둬요. 경로만 떠올리면 표현이 줄줄이 나와요."],
+    ["🔬","정교화 · 원리 이해","'왜 an인지, 왜 s인지'를 알면 외울 양이 줄고 새 표현에도 적용돼요. 디테일 해부와 원리 설명."],
+    ["🧩","청킹 (덩어리 기억)","place / an / order를 따로 외우지 않고 한 덩어리로 소리 내 외워요. 콜로케이션 그대로."],
+    ["⚠️","오류 기반 학습","s 하나, 관사 하나만 다른 함정 보기를 일부러 틀려 보고 이유를 확인하면 같은 실수를 덜 해요."],
+    ["✍️","생성 효과","정답을 보는 것보다 직접 조립해 만들 때 더 오래 남아요. 문장 조립 타일."],
+    ["🗣️","산출 효과 · 섀도잉","소리 내어 말한 단어가 눈으로만 본 단어보다 잘 기억돼요. 따라 말하기·말하기 퀴즈."],
+    ["🔀","인터리빙","여러 날의 표현과 문제 유형을 섞으면 구별하는 힘이 길러져요. 복습 세션."],
+    ["🙋","자기 참조 · 전이","내 이야기로 직접 써 볼 때 실제 회화에서 바로 튀어나와요. AI 실전 회화."],
+    ["🎧","수동 반복 노출 · 수면 전 복습","핸즈프리 듣기로 이동 중이나 자기 전에 귀로 한 번 더 들어요. 잠은 낮에 배운 걸 정리해 줘요."],
+    ["😴","망각 직전 복습 알림","어제·그저께 배운 걸 버튼 하나로 다시 볼 수 있어요. 오늘 공부를 마치면 바로 이전 학습 복습으로 이어져요."]
+  ];
+  return topbar("이 앱의 암기법") + `<p class="muted" style="margin-top:0">기억 연구에서 효과가 확인된 방법들을 학습 코스에 녹여 두었어요.</p>` + M.map(([ic,t,d])=>`<div class="method"><div class="ic">${ic}</div><div><b>${esc(t)}</b><p>${esc(d)}</p></div></div>`).join("");
+}
+
+/* ============ events ============ */
+const A = {
+  back(el){ const to=el.dataset.to; if(to==="lesson" && S.lid) go("lesson"); else go("home"); },
+  go(el){ go(el.dataset.to); },
+  lesson(el){ go("lesson", {lid:el.dataset.lid}); },
+  item(el){ S.sheet = {lid: el.dataset.lid || S.lid, iid: el.dataset.id}; render(); },
+  "close-sheet"(el, ev){ if(ev.target.closest("[data-stop]") && !el.classList.contains("icon-btn")) return; Voice.stop(); if(Mic.active) Mic.stop(); S.sheet=null; render(); },
+  say(el){ say(el.dataset.text, el.dataset.lang||"en", el.dataset.rate?+el.dataset.rate:undefined); },
+  tok(el){ const tip = el.closest(".card").querySelector("#tok-tip"); if(tip){ tip.hidden=false; tip.textContent = TOK_TIP[el.dataset.r] || ""; } },
+  step(el){
+    const k=el.dataset.k;
+    if(k==="cards") go("cards", {idx:0});
+    else if(k==="story") go("story", {blank:false});
+    else if(k==="quiz") lessonDrill("detail");
+    else if(k==="build") lessonDrill("build");
+    else if(k==="speak") lessonDrill("speak");
+    else if(k==="chat"){ go("chat", {chat:{turns:[], msgs:[], used:new Set(), sugg:[], busy:false}}); if(AI.ok()) chatCall(); }
+  },
+  "card-prev"(){ S.idx=Math.max(0,S.idx-1); render(); window.scrollTo(0,0); },
+  "card-next"(){ const L=lessonById(S.lid); if(S.idx<L.items.length-1){ S.idx++; render(); window.scrollTo(0,0); say(L.items[S.idx].en); } else { learnItems(L.id); markStep(L.id,"cards"); toast("카드 완료! 내일 첫 복습이 잡혔어요."); go("lesson"); } },
+  "story-done"(){ learnItems(S.lid); markStep(S.lid,"story"); toast("스토리 완료!"); go("lesson"); },
+  "story-blank"(){ go("story", {blank:true}); },
+  blank(el){ S.blank = el.dataset.v==="1"; render(); },
+  reveal(el){ el.classList.remove("blank"); el.textContent = el.dataset.txt; say(el.dataset.txt); },
+  jump(el, ev){ ev.preventDefault(); const t=document.getElementById("scene-"+el.dataset.i); if(t) t.scrollIntoView({behavior:"smooth"}); },
+  "story-all"(){ const L=lessonById(S.lid); const text=(L.story.scenes||[]).map(s=>s.en).join(" "); if(Voice.t){ Voice.t.speak((L.story.scenes||[]).map(s=>({text:s.en, language:"en"})), {rate:Settings.rate, voice:Settings.voice}).catch(()=>{}); } else say(text); },
+  drillmode(el){ lessonDrill(el.dataset.type); },
+  review(el){ reviewDrill(el.dataset.kind); },
+  pick(el){ const D=S.drill; const t=D.tasks[D.i]; if(D.answered) return; const o=t.opts[+el.dataset.k]; t.picked=+el.dataset.k; answer(o.ok); },
+  place(el){ const t=S.drill.tasks[S.drill.i]; const i=+el.dataset.i; if(!t.placed.includes(i)){ t.placed.push(i); const w=t.tiles.find(x=>x.i===i); render(); } },
+  unplace(el){ const t=S.drill.tasks[S.drill.i]; t.placed = t.placed.filter(i=>i!==+el.dataset.i); render(); },
+  "build-clear"(){ const t=S.drill.tasks[S.drill.i]; t.placed=[]; render(); },
+  "build-check"(){ const t=S.drill.tasks[S.drill.i]; const got=t.placed.map(i=>t.tiles.find(x=>x.i===i).w.toLowerCase()); answer(got.join(" ")===t.answer.join(" ")); },
+  "self-reveal"(){ const t=S.drill.tasks[S.drill.i]; t.self=true; S.drill.answered=true; render(); say(t.model); },
+  "self-grade"(el){ const q=+el.dataset.q; const D=S.drill; const t=D.tasks[D.i]; t.self=false; t.heard=""; t.judge={ok:q>=4, issues: q>=4?[]:["스스로 평가: 다시 연습이 필요해요."]};
+    if(!t.graded){ t.graded=true; grade(t.lid,t.iid,q); D.results.push({lid:t.lid,iid:t.iid,ok:q>=4}); if(q<4 && !D.requeued.has(t.lid+"/"+t.iid)){ D.requeued.add(t.lid+"/"+t.iid); D.tasks.push({type:"reverse", lid:t.lid, iid:t.iid, graded:true}); } }
+    t.correct=q>=4; next(); },
+  next(){ next(); },
+  "after-step"(){ const L=lessonById(S.lid); const sd=stepsDone(L.id); const core=["cards","story","quiz","build","speak"]; if(core.every(k=>sd[k])){ learnItems(L.id); go("done"); } else go("lesson"); },
+  mic(el){
+    const ctx=el.dataset.ctx;
+    if(ctx==="shadow"){ const L=lessonById(el.dataset.lid || (S.sheet&&S.sheet.lid) || S.lid); const it=L && L.items.find(i=>i.id===el.dataset.id); Mic.toggle(text => { const box=$("#mic-result"); if(box && it) box.innerHTML = verdictHTML(it, text, judgeSpeech(it, text)); }); }
+    else if(ctx==="drill"){ Mic.toggle(text => { const D=S.drill; const t=D.tasks[D.i]; if(!t || D.answered) return; const it=itemOf(t.lid,t.iid); t.heard=text; t.judge=judgeSpeech(it,text); if(t.judge.empty){ toast("소리가 들리지 않았어요. 다시 눌러 말해 보세요."); return; } answer(t.judge.ok, t.judge.ok?5:2); }); }
+    else if(ctx==="chat"){ Mic.toggle(text => { if(text) chatSend(text); else toast("소리가 들리지 않았어요."); }); }
+  },
+  sugg(el){ const C=S.chat; const s=C.sugg[+el.dataset.k]; if(!s) return; if(s.bad){ s.revealed=true; render(); toast("함정이에요! 이유를 확인해 보세요."); return; } chatSend(s.en); },
+  "chat-retry"(){ chatCall(); },
+  hands(){ const lid = S.lid || (lessons()[0]&&lessons()[0].id); go("hands", {lid, hf:{lid, i:0, round:1, playing:false, ko:true, ex:true, shuffle:false}}); },
+  "hf-toggle"(){ const H=S.hf; H.playing=!H.playing; H.stop=false; if(!H.playing) Voice.stop(); render(); if(H.playing) hfLoop(); },
+  "hf-next"(){ const H=S.hf; const L=lessonById(H.lid); H.i=(H.i+1)%L.items.length; Voice.stop(); render(); },
+  "hf-prev"(){ const H=S.hf; const L=lessonById(H.lid); H.i=(H.i-1+L.items.length)%L.items.length; Voice.stop(); render(); },
+  "hf-ko"(){ S.hf.ko=!S.hf.ko; render(); }, "hf-ex"(){ S.hf.ex=!S.hf.ex; render(); },
+  "hf-shuffle"(){ const H=S.hf; H.shuffle=!H.shuffle; render(); },
+  add(){ go("add", {add:{stage:"pick", files:[], urls:[], items:[], log:[]}}); },
+  "pick-photo"(){ $("#photo-input").click(); },
+  "rm-photo"(el){ const A_=S.add; const i=+el.dataset.i; URL.revokeObjectURL(A_.urls[i]); A_.files.splice(i,1); A_.urls.splice(i,1); render(); },
+  extract(){ runExtract(); },
+  abort(){ S.add.ctl && S.add.ctl.abort(); },
+  "toggle-item"(el){ const it=S.add.items[+el.dataset.i]; it.off=!it.off; render(); },
+  enrich(){ runEnrich(); },
+  "restart-add"(){ S.add.stage="pick"; S.add.err=""; render(); },
+  "del-lesson"(el){ const lid=el.dataset.lid; if(el.dataset.armed!=="1"){ el.dataset.armed="1"; el.textContent="한 번 더 누르면 삭제돼요"; el.classList.add("on"); return; }
+    if(lid===BUILTIN.id) setMeta(m=>{ m.hidden=[...(m.hidden||[]), lid]; }); else Store.del("L_"+lid); Store.del("S_"+lid); toast("삭제했어요."); go("home"); },
+  "restore-builtin"(){ setMeta(m=>{ m.hidden=(m.hidden||[]).filter(x=>x!==BUILTIN.id); }); toast("Day 06 학습을 다시 보이게 했어요."); },
+  voice(el){ Settings.set("voice", el.dataset.v); render(); },
+  "save-key"(){ const v=$("#apikey").value.trim(); try{ localStorage.setItem("pp-key", v); }catch(e){} toast(v?"키를 저장했어요.":"키를 지웠어요."); render(); }
+};
+function next(){ const D=S.drill; D.i++; D.answered=false; render(); window.scrollTo(0,0); const t=D.tasks[D.i]; if(t){ prepTask(t); if(t.type==="listen") say(itemOf(t.lid,t.iid).en); } }
+document.addEventListener("click", ev => {
+  const el = ev.target.closest("[data-act]"); if(!el) return;
+  const fn = A[el.dataset.act]; if(!fn) return;
+  if(el.dataset.act==="close-sheet" && el.classList.contains("sheet-wrap") && ev.target!==el) return;
+  if(el.tagName==="INPUT") return;
+  fn(el, ev);
+});
+document.addEventListener("input", ev => {
+  const el=ev.target; if(el.id==="rate"){ Settings.set("rate", +el.value); $("#rate-v").textContent=(+el.value).toFixed(2)+"×"; }
+  if(el.id==="pause"){ Settings.set("pause", +el.value); $("#pause-v").textContent=el.value+"초"; }
+});
+$("#photo-input").addEventListener("change", ev => {
+  const files=[...ev.target.files].filter(f=>/^image\//.test(f.type)); ev.target.value="";
+  if(!S.add) return; files.forEach(f=>{ S.add.files.push(f); S.add.urls.push(URL.createObjectURL(f)); }); render();
+});
+document.addEventListener("keydown", ev => { if(ev.key==="Escape" && S.sheet){ S.sheet=null; render(); } });
+
+/* ============ boot ============ */
+render();
+(async () => {
+  useCap("tts").then(t => { if(t){ Voice.t=t; render(); } });
+  useCap("dictation").then(d => { if(d){ Mic.attach(d); render(); } });
+  useCap("sample").then(async s => { if(s){ AI.s=s; try{ AI.limits = await s.limits(); }catch(e){} } else AI.s = false; render(); });
+  await Store.init(); render();
+})();
+</script>
